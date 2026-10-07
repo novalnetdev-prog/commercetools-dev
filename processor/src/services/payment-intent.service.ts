@@ -300,7 +300,7 @@ async function saveCaptureOrCancel(payment: Payment, reference: Reference,
           centAmount: original.amount.centAmount,
           currencyCode: original.amount.currencyCode,
         },
-        interactionId, state: "Success",
+        interactionId, state: "Success", timestamp: new Date().toISOString(),
       } });
     }
   } else {
@@ -308,7 +308,7 @@ async function saveCaptureOrCancel(payment: Payment, reference: Reference,
     if (!latest.transactions.some((tx) => tx.type === "CancelAuthorization" && tx.interactionId === interactionId)) {
       actions.push({ action: "addTransaction", transaction: {
         type: "CancelAuthorization", amount: original.amount,
-        interactionId, state: "Success",
+        interactionId, state: "Success", timestamp: new Date().toISOString(),
       } });
     }
   }
@@ -356,7 +356,7 @@ async function saveRefund(payment: Payment, reference: Reference,
   if (!existing) {
     actions.push({ action: "addTransaction", transaction: {
       type: "Refund", amount: { centAmount: amount, currencyCode: currency },
-      state: "Success", interactionId: refundTid,
+      state: "Success", interactionId: refundTid, timestamp: new Date().toISOString(),
       custom: {
         type: { key: "novalnet-custom-field", typeId: "type" },
         fields: { transactionComments: comment },
