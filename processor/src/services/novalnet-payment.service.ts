@@ -43,6 +43,8 @@ import type {
   NovalnetOrderStateInput,
   NovalnetOrderStates,
 } from "./novalnet-order-state.service";
+import { bankTransferDetails, bankTransferReference, buildPayPalCartInfo,
+  getNovalnetSystemInfo, updateBankTransferReference } from "../utils/novalnet-request";
 
 type NovalnetConfig = {
   testMode: string;
@@ -264,7 +266,9 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       throw new Error("Transaction missing id");
     }
 
-    const transactionComments = `Novalnet Transaction ID: ${
+    const transactionComments = !parsedData.status_text && tx.custom?.fields?.transactionComments
+      ? String(tx.custom.fields.transactionComments)
+      : `Novalnet Transaction ID: ${
       parsedData.tid ?? "NN/A"
     }\nPayment Type: ${getPaymentMethodName("en", parsedData.payment_type)}\n${
       parsedData.status_text ?? "NN/A"
@@ -283,28 +287,23 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       });
     }
 
-    actions.push({
+    if (tx.custom?.fields?.transactionComments !== transactionComments) actions.push({
       action: "setTransactionCustomField",
       transactionId: txId,
       name: "transactionComments",
       value: transactionComments,
     });
 
-    actions.push({
+    if (tx.state !== "Failure") actions.push({
       action: "changeTransactionState",
       transactionId: txId,
       state: "Failure",
     });
 
-    await projectApiRoot
+    if (actions.length) await projectApiRoot
       .payments()
       .withId({ ID: parsedData.ctPaymentID })
-      .post({
-        body: {
-          version,
-          actions,
-        },
-      })
+      .post({ body: { version, actions } })
       .execute();
     
     log.info("[failureResponse] Payment failure comments saved", {
@@ -427,6 +426,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
           type: getPaymentMethodName(locale, paymentType),
         }),
         isTestMode ? t(locale, "payment.testMode") : "",
+        bankTransferDetails(responseData?.transaction ?? {}, locale),
       ].join("\n");
 
       const { txId } = await this.updatePaymentTransaction({
@@ -575,6 +575,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       amount: String(parsedCart?.taxedPrice?.totalGross?.centAmount),
       currency: String(parsedCart?.taxedPrice?.totalGross?.currencyCode),
       order_no: String(orderNumber),
+      ...getNovalnetSystemInfo(request.data.path ?? config.merchantReturnUrl, packageJSON.version),
     };
     const deliveryStreet = this.splitStreetByComma(deliveryAddress?.streetName);
     const billingStreet = this.splitStreetByComma(billingAddress?.streetName);
@@ -689,8 +690,8 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       }),
       paymentMethodInfo: {
         paymentInterface: getPaymentInterfaceFromContext() || "mock",
-        method: getPaymentMethodName("en", type),
-        name: getPaymentMethodNames(type),
+        method: getPaymentMethodName("en", transaction.payment_type),
+        name: getPaymentMethodNames(transaction.payment_type),
       },
       ...(ctCart.customerId && {
         customer: { typeId: "customer", id: ctCart.customerId },
@@ -800,6 +801,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         first_name: firstName,
         last_name: lastName,
         email: parsedCart.customerEmail,
+        ...(request.customerIp && { customer_ip: request.customerIp }),
         ...(birthDate && {
           birth_date: birthDate,
         }),
@@ -882,11 +884,6 @@ export class NovalnetPaymentService extends AbstractPaymentService {
     const paymentType = transactions?.payment_type;
     const isTestMode = transactions?.test_mode == 1;
     const bankDetails = transactions?.bank_details;
-    const accountHolder = bankDetails?.account_holder;
-    const iban = bankDetails?.iban;
-    const bic = bankDetails?.bic;
-    const bankName = bankDetails?.bank_name;
-    const bankPlace = bankDetails?.bank_place;
 
     const supportedLocales: SupportedLocale[] = ["en", "de"];
     const localizedTransactionComments = supportedLocales.reduce(
@@ -908,15 +905,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
     if (bankDetails) {
       localizedBankDetailsComment = supportedLocales.reduce(
         (acc, locale) => {
-          acc[locale] = [
-            t(locale, "payment.referenceText", { amount }),
-            t(locale, "payment.accountHolder", { accountHolder }),
-            t(locale, "payment.iban", { iban }),
-            t(locale, "payment.bic", { bic }),
-            t(locale, "payment.bankName", { bankName }),
-            t(locale, "payment.bankPlace", { bankPlace }),
-            t(locale, "payment.transactionId", { tid }),
-          ].join("\n");
+          acc[locale] = bankTransferDetails(transactions, locale);
           return acc;
         },
         {} as Record<SupportedLocale, string>,
@@ -1152,7 +1141,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         },
       });
   
-      actions.push({
+      if (order.custom?.fields?.paymentComments !== paymentComment) actions.push({
         action: "setCustomField",
         name: "paymentComments",
         value: paymentComment,
@@ -1371,6 +1360,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     statusCode,
     state,
     appendComments = true,
+    avoidDuplicateComment = false,
+    bankReferenceLocale,
+    bankReferenceTransaction,
     setCustomType = false,
     setStatusInterfaceCode = true,
     changeTransactionState = true,
@@ -1382,6 +1374,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     statusCode?: string;
     state?: "Initial" | "Pending" | "Success" | "Failure";
     appendComments?: boolean;
+    avoidDuplicateComment?: boolean;
+    bankReferenceLocale?: SupportedLocale;
+    bankReferenceTransaction?: Record<string, any>;
     setCustomType?: boolean;
     setStatusInterfaceCode?: boolean;
     changeTransactionState?: boolean;
@@ -1440,9 +1435,17 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       };
     }
 
-    const finalComments =
-      appendComments && existingComments
-        ? `${existingComments}\n\n---\n${transactionComments}`
+    const previousComments = bankReferenceLocale && bankReferenceTransaction
+      ? updateBankTransferReference(existingComments, {
+          ...bankReferenceTransaction,
+          amount: bankReferenceTransaction.amount ?? tx.amount?.centAmount,
+          currency: bankReferenceTransaction.currency ?? tx.amount?.currencyCode,
+        }, bankReferenceLocale)
+      : existingComments;
+    const finalComments = avoidDuplicateComment && previousComments.includes(transactionComments)
+      ? previousComments
+      : appendComments && previousComments
+        ? `${previousComments}\n\n---\n${transactionComments}`
         : transactionComments;
 
     const actions: PaymentUpdateAction[] = [];
@@ -1537,6 +1540,8 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     transactionComments,
     state,
     setStatusInterfaceCode = true,
+    statusCodeOverride,
+    avoidDuplicateComment = false,
     changeTransactionState = true,
     skipSettlement = false,
   }: {
@@ -1544,6 +1549,8 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     transactionComments: string;
     state?: "Initial" | "Pending" | "Success" | "Failure";
     setStatusInterfaceCode?: boolean;
+    statusCodeOverride?: string;
+    avoidDuplicateComment?: boolean;
     changeTransactionState?: boolean;
     skipSettlement?: boolean;
   }) {
@@ -1574,7 +1581,8 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       paymentId,
       pspReference,
       transactionComments,
-      statusCode: webhook.transaction?.status_code,
+      avoidDuplicateComment,
+      statusCode: statusCodeOverride ?? webhook.transaction?.status_code,
       state: effectiveState,
       setStatusInterfaceCode,
       changeTransactionState,
@@ -1656,7 +1664,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       paymentType: webhook?.transaction?.payment_type,
     });
 
-    if (status !== "SUCCESS") {
+    const initialFailure = eventType === "PAYMENT" && status === "FAILURE" &&
+      String(webhook.transaction?.status ?? "").toUpperCase() === "FAILURE";
+    if (status !== "SUCCESS" && !initialFailure) {
 
       log.warn("Webhook ignored (non-success)", {
         eventType,
@@ -1899,6 +1909,25 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         transactionType: tx.type,
         transactionState: tx.state,
       });
+
+      if (novalnetStatus === "FAILURE") {
+        await this.updatePaymentTransaction({
+          paymentId, pspReference, transactionComments,
+          statusCode: newInterfaceCode, state: "Failure", setCustomType: true,
+        });
+      }
+      const bankDetails = webhook.transaction?.bank_details;
+      const bankComment = bankTransferDetails(webhook.transaction ?? {}, locale);
+      if (bankDetails && bankComment && !currentComments.includes(bankComment)) {
+        await this.updatePaymentTransaction({
+          paymentId, pspReference,
+          transactionComments: bankComment,
+          statusCode: newInterfaceCode, changeTransactionState: false,
+          setCustomType: true,
+        });
+      }
+
+      await this.syncPaymentToOrder(paymentId, pspReference);
 
       return "Already synchronized";
     }
@@ -2422,6 +2451,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
                 action: "addTransaction",
                 transaction: {
                   type: "Refund",
+                  timestamp: new Date().toISOString(),
                   amount: {
                     centAmount: refundAmount,
                     currencyCode:
@@ -2538,6 +2568,10 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       statusCode,
       state: status === "CONFIRMED" || status === "ON_HOLD" ? "Success" : "Pending",
       appendComments: true,
+      ...(["DUE_DATE", "AMOUNT_DUE_DATE"].includes(updateType) && {
+        bankReferenceLocale: locale,
+        bankReferenceTransaction: webhook.transaction,
+      }),
       setCustomType: true,
       errorMessage: "Authorization transaction not found",
     });
@@ -2595,7 +2629,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     const creditAmount = Number(webhook.transaction?.amount ?? 0); // cents
     const currency = String(webhook.transaction?.currency ?? "");
 
-    const transactionComments = this.buildTransactionComments(
+    let transactionComments = this.buildTransactionComments(
       webhook,
       locale,
     );
@@ -2679,6 +2713,10 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     const creditEvents: Record<string, number> = {
       ...(customObject?.value?.creditEvents ?? {}),
     };
+    const creditEventComments: Record<string, string> = {
+      ...(customObject?.value?.creditEventComments ?? {}),
+    };
+    transactionComments = creditEventComments[eventTID] ?? transactionComments;
     if (creditEvents[eventTID] != null && creditEvents[eventTID] !== creditAmount) {
       throw new Error("Credit TID already used for another amount");
     }
@@ -2686,8 +2724,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       creditedAmount += creditAmount;
       if (creditedAmount > remainingPayable) throw new Error("Credit exceeds remaining payable amount");
       creditEvents[eventTID] = creditAmount;
+      creditEventComments[eventTID] = transactionComments;
       await customObjectService.upsert(container, key, {
-        ...(customObject?.value ?? {}), creditedAmount, creditEvents,
+        ...(customObject?.value ?? {}), creditedAmount, creditEvents, creditEventComments,
       });
     }
 
@@ -2724,34 +2763,20 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       webhook,
       transactionComments,
       state: fullyPaid ? "Success" : "Pending",
-      setStatusInterfaceCode: false,
+      setStatusInterfaceCode: fullyPaid,
+      statusCodeOverride: fullyPaid ? "100" : undefined,
+      avoidDuplicateComment: true,
       skipSettlement: true,
     });
-
-    if (fullyPaid) {
-      log.info("[CREDIT] Full payment received. Updating interface code.", {
-        paymentId,
-        statusCode: "100",
-      });
-
-      await this.updatePaymentTransaction({
-        paymentId,
-        pspReference,
-        transactionComments,
-        statusCode: "100",
-        state: "Success",
-        appendComments: true,
-        setStatusInterfaceCode: true,
-        changeTransactionState: false,
-      });
-    }
       
     const existingComments =
       customObject?.value?.additionalInfo?.comments ?? "";
 
-    const finalComments = existingComments
-      ? `${existingComments}\n\n---\n${transactionComments}`
-      : transactionComments;
+    const finalComments = customObject?.value?.additionalInfo?.lastCreditTid === eventTID
+      ? existingComments
+      : existingComments
+        ? `${existingComments}\n\n---\n${transactionComments}`
+        : transactionComments;
       
     await customObjectService.upsert(
       container,
@@ -2760,6 +2785,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         ...(customObject?.value ?? {}),
         creditedAmount,
         creditEvents,
+        creditEventComments,
         additionalInfo: {
           ...(customObject?.value?.additionalInfo ?? {}),
           comments: finalComments,
@@ -2859,6 +2885,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
           action: "addTransaction",
           transaction: {
             type: "Chargeback", state: "Success", interactionId: eventTid,
+            timestamp: new Date().toISOString(),
             amount: {
               centAmount: Number(webhook.transaction?.amount),
               currencyCode: String(webhook.transaction?.currency ?? latest.amountPlanned.currencyCode),
@@ -3340,6 +3367,8 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
       order_no:
         orderNumber,
+
+      ...getNovalnetSystemInfo(path || config.merchantReturnUrl, packageJSON.version),
     };
 
     if (
@@ -3459,9 +3488,15 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
         email:
           parsedCart.customerEmail,
+
+        ...(request.customerIp && { customer_ip: request.customerIp }),
       },
 
       transaction,
+
+      ...(type.toUpperCase() === "PAYPAL" && {
+        cart_info: buildPayPalCartInfo(parsedCart, lang === "de" ? "de" : "en"),
+      }),
 
       custom: {
         input1:
@@ -3761,6 +3796,7 @@ private async addSettlementTransactionIfRequired({
               action: "addTransaction",
               transaction: {
                 type: transactionType,
+                timestamp: new Date().toISOString(),
                 amount: transactionAmount,
                 interactionId,
                 state: "Success",
@@ -3825,37 +3861,7 @@ private buildTransactionComments(
       const bankDetails = webhook.transaction?.bank_details;
 
       if (bankDetails) {
-        comments.push("");
-        comments.push(
-          t(locale, "payment.referenceText", {
-            amount: String(webhook.transaction?.amount ?? ""),
-          }),
-        );
-        comments.push(
-          t(locale, "payment.accountHolder", {
-            accountHolder: String(bankDetails.account_holder ?? ""),
-          }),
-        );
-        comments.push(
-          t(locale, "payment.iban", {
-            iban: String(bankDetails.iban ?? ""),
-          }),
-        );
-        comments.push(
-          t(locale, "payment.bic", {
-            bic: String(bankDetails.bic ?? ""),
-          }),
-        );
-        comments.push(
-          t(locale, "payment.bankName", {
-            bankName: String(bankDetails.bank_name ?? ""),
-          }),
-        );
-        comments.push(
-          t(locale, "payment.bankPlace", {
-            bankPlace: String(bankDetails.bank_place ?? ""),
-          }),
-        );
+        comments.push("", bankTransferDetails(webhook.transaction, locale));
       }
 
       return comments.join("\n");
