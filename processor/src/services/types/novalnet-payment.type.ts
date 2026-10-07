@@ -11,6 +11,7 @@ export type NovalnetPaymentServiceOptions = {
 export type CreatePaymentRequest = {
   data: PaymentRequestSchemaDTO;
   cartId?: string;
+  customerIp?: string;
 };
 
 export interface UpdatePayment {
