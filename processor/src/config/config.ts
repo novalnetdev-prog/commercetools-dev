@@ -123,6 +123,13 @@ export const config = {
   novalnet_INSTALMENT_DIRECT_DEBIT_SEPA_MinimumAmount:
     process.env.NOVALNET_SEPA_PAYMENT_ACTION_MINIMUM_AMOUNT || "0",
 
+  novalnet_PAYPAL_TestMode:
+    process.env.NOVALNET_PAYPAL_TEST_MODE || "0",
+  novalnet_PAYPAL_PaymentAction:
+    process.env.NOVALNET_PAYPAL_PAYMENT_ACTION || "",
+  novalnet_PAYPAL_MinimumAmount:
+    process.env.NOVALNET_PAYPAL_PAYMENT_ACTION_MINIMUM_AMOUNT || "0",
+
 
   novalnet_APPLEPAY_TestMode:
     process.env.NOVALNET_APPLEPAY_TEST_MODE || "0",
@@ -134,8 +141,6 @@ export const config = {
     process.env.NOVALNET_PRZELEWY24_TEST_MODE || "0",
   novalnet_EPS_TestMode:
     process.env.NOVALNET_EPS_TEST_MODE || "0",
-  novalnet_PAYPAL_TestMode:
-    process.env.NOVALNET_PAYPAL_TEST_MODE || "0",
   novalnet_POSTFINANCE_CARD_TestMode:
     process.env.NOVALNET_POSTFINANCE_CARD_TEST_MODE || "0",
   novalnet_POSTFINANCE_TestMode:
@@ -156,12 +161,18 @@ export const config = {
     process.env.NOVALNET_BLIK_TEST_MODE || "0",
   novalnet_TWINT_TestMode:
     process.env.NOVALNET_TWINT_TEST_MODE || "0",
-  novalnet_PIX_TestMode: process.env.NOVALNET_PIX_TEST_MODE || "0",
-  novalnet_BOLETO_TestMode: process.env.NOVALNET_BOLETO_TEST_MODE || "0",
-  novalnet_BIZUM_TestMode: process.env.NOVALNET_BIZUM_TEST_MODE || "0",
-  novalnet_BANCOMATPAY_TestMode: process.env.NOVALNET_BANCOMAT_TEST_MODE || "0",
-  novalnet_KAKAOPAY_TestMode: process.env.NOVALNET_KAKAOPAY_TEST_MODE || "0",
-  novalnet_NAVERPAY_TestMode: process.env.NOVALNET_NAVERPAY_TEST_MODE || "0",
+  novalnet_PIX_TestMode: 
+    process.env.NOVALNET_PIX_TEST_MODE || "0",
+  novalnet_BOLETO_TestMode: 
+    process.env.NOVALNET_BOLETO_TEST_MODE || "0",
+  novalnet_BIZUM_TestMode: 
+    process.env.NOVALNET_BIZUM_TEST_MODE || "0",
+  novalnet_BANCOMATPAY_TestMode: 
+    process.env.NOVALNET_BANCOMAT_TEST_MODE || "0",
+  novalnet_KAKAOPAY_TestMode: 
+    process.env.NOVALNET_KAKAOPAY_TEST_MODE || "0",
+  novalnet_NAVERPAY_TestMode: 
+    process.env.NOVALNET_NAVERPAY_TEST_MODE || "0",
 
   returnurl: process.env.RETURN_URL,
   merchantReturnUrl: process.env.MERCHANT_RETURN_URL || "",
