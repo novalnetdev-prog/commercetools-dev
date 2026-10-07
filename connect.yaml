@@ -57,7 +57,7 @@ deployAs:
           required: false
           default: "14"
         - key: NOVALNET_INVOICE_PAYMENT_ACTION
-          description: Payment action for Invoice (payment/authorize)
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
           required: true
         - key: NOVALNET_INVOICE_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
@@ -70,7 +70,7 @@ deployAs:
           required: false
           default: "0"
         - key: NOVALNET_GUARANTEED_INVOICE_PAYMENT_ACTION
-          description: Payment action for Guarantee Invoice (payment/authorize)
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
           required: true
         - key: NOVALNET_GUARANTEED_INVOICE_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
@@ -84,7 +84,7 @@ deployAs:
           required: false
           default: "0"
         - key: NOVALNET_GUARANTEED_SEPA_PAYMENT_ACTION
-          description: Payment action for Guarantee SEPA (payment/authorize)
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
           required: true
         - key: NOVALNET_GUARANTEED_SEPA_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
@@ -106,7 +106,7 @@ deployAs:
           required: false
           default: "3"
         - key: NOVALNET_SEPA_PAYMENT_ACTION
-          description: Payment action for SEPA (payment/authorize)
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
           required: true
         - key: NOVALNET_SEPA_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
@@ -116,7 +116,7 @@ deployAs:
           required: false
           default: "0"
         - key: NOVALNET_CREDITCARD_PAYMENT_ACTION
-          description: Payment action for Creditcard (payment/authorize)
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
           required: true
         - key: NOVALNET_CREDITCARD_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
@@ -133,6 +133,9 @@ deployAs:
           description: The payment will be processed in the test mode therefore amount for this transaction will not be charged (1=Test, 0=Live)
           required: false
           default: "0"
+        - key: NOVALNET_PAYPAL_PAYMENT_ACTION
+          description: Choose whether or not the payment should be charged immediately. Capture completes the transaction by transferring the funds from buyer account to merchant account. Authorize verifies payment details and reserves funds to capture it later, giving time for the merchant to decide on the order (payment/authorize)
+          required: true
         - key: NOVALNET_PAYPAL_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
           required: false
