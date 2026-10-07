@@ -2080,8 +2080,11 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     );
 
     const alreadyCancelled =
-      tx.type === "CancelAuthorization" &&
-      tx.state === "Failure" &&
+      payment.transactions?.some((transaction: any) =>
+        transaction.type === "CancelAuthorization" &&
+        transaction.state === "Success" &&
+        transaction.interactionId === `${pspReference}-CancelAuthorization`,
+      ) &&
       currentInterfaceCode === newInterfaceCode;
 
     if (alreadyCancelled) {
@@ -2130,6 +2133,98 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     return transactionComments;
   }
+
+  private async handlePreCreditPartialRefund(
+    webhook: Record<string, any>,
+  ): Promise<string> {
+    const paymentId = webhook.custom?.["ctpayment-id"] ?? webhook.custom?.inputval1;
+    const pspReference = webhook.custom?.pspReference ?? webhook.custom?.inputval2;
+    if (!paymentId || !pspReference) throw new Error("Missing payment reference");
+
+    const refundAmount = Number(webhook.transaction?.refund?.amount);
+    const remainingAmount = Number(webhook.transaction?.amount);
+    const currency = String(webhook.transaction?.currency ?? "");
+    const payment = (await this.ctPaymentService.getPayment({ id: paymentId } as any)) as any;
+    const currentPayment = payment?.body ?? payment;
+    const authorization = currentPayment.transactions?.find((tx: any) =>
+      tx.type === "Authorization" && tx.interactionId === pspReference,
+    );
+    if (!authorization) throw new Error("Pre-credit authorization transaction not found");
+    if (currentPayment.transactions?.some((tx: any) =>
+      tx.type === "CancelAuthorization" && tx.state === "Success" &&
+      tx.interactionId === `${pspReference}-CancelAuthorization`,
+    )) return "Already synchronized";
+    if (currentPayment.transactions?.some((tx: any) =>
+      tx.type === "Charge" && tx.state === "Success",
+    )) throw new Error("Pre-credit reduction received after charge");
+
+    const plannedAmount = Number(authorization.amount.centAmount);
+    if (!Number.isSafeInteger(plannedAmount) || plannedAmount <= 0 ||
+        !Number.isSafeInteger(refundAmount) || refundAmount <= 0 ||
+        !Number.isSafeInteger(remainingAmount) || remainingAmount <= 0 ||
+        remainingAmount >= plannedAmount ||
+        currency !== authorization.amount.currencyCode ||
+        webhook.transaction?.refund?.currency !== currency) {
+      throw new Error("Invalid pre-credit partial refund amount or currency");
+    }
+
+    const container = "nn-private-data";
+    const key = `${paymentId}-${pspReference}`;
+    let saved: any = null;
+    try {
+      saved = (await projectApiRoot.customObjects()
+        .withContainerAndKey({ container, key }).get().execute()).body;
+    } catch (error: any) {
+      const status = error?.statusCode ?? error?.status ?? error?.body?.statusCode;
+      if (status !== 404) throw error;
+    }
+
+    const previousRefunded = Number(saved?.value?.preCreditRefundedAmount ?? 0);
+    const creditedAmount = Number(saved?.value?.creditedAmount ?? 0);
+    const totalRefunded = plannedAmount - remainingAmount;
+    if (!Number.isSafeInteger(previousRefunded) || previousRefunded < 0 ||
+        !Number.isSafeInteger(creditedAmount) || creditedAmount < 0) {
+      throw new Error("Invalid stored pre-credit payment amounts");
+    }
+    if (totalRefunded < previousRefunded ||
+        (creditedAmount > 0 && totalRefunded === previousRefunded)) {
+      return "Already synchronized";
+    }
+    if (creditedAmount > 0) throw new Error("Pre-credit refund received after credit");
+    if (totalRefunded > previousRefunded &&
+        totalRefunded - previousRefunded !== refundAmount) {
+      throw new Error("Pre-credit refund amount does not match the remaining balance");
+    }
+
+    const lang = webhook.custom?.lang as SupportedLocale;
+    const locale: SupportedLocale = lang === "en" ? "en" : "de";
+    const comment = this.buildTransactionComments(webhook, locale);
+
+    if (totalRefunded > previousRefunded) {
+      await customObjectService.upsert(container, key, {
+        ...(saved?.value ?? {}),
+        preCreditRefundedAmount: totalRefunded,
+        preCreditRemainingAmount: remainingAmount,
+      });
+    }
+
+    const currentComments = String(authorization.custom?.fields?.transactionComments ?? "");
+    if (!currentComments.includes(comment)) {
+      await this.updatePaymentTransaction({
+        paymentId, pspReference, transactionComments: comment,
+        statusCode: webhook.transaction?.status_code,
+        changeTransactionState: false,
+        setCustomType: true,
+      });
+    }
+    await this.syncPaymentToOrder(paymentId, pspReference);
+    await this.updateOrderStates({ paymentId, paymentState: "Pending" });
+
+    log.info("[REFUND] Pre-credit partial reduction recorded", {
+      paymentId, pspReference, refundAmount, totalRefunded, remainingAmount,
+    });
+    return comment;
+  }
   
   private async handleTransactionRefund(
     webhook: Record<string, any>,
@@ -2174,14 +2269,25 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       paymentType: webhook.transaction?.payment_type,
     });
 
-    if (!paymentId || !pspReference || !refundTid) {
+    if (!paymentId || !pspReference) {
       log.error("[REFUND] Missing mandatory data", {
         paymentId,
         pspReference,
         refundTid,
       });
-      throw new Error("Missing refund reference");
+      throw new Error("Missing payment reference");
     }
+
+    const transactionStatus = String(webhook.transaction?.status ?? "").toUpperCase();
+    if (!refundTid && transactionStatus === "DEACTIVATED") {
+      const comment = await this.handleTransactionCancel(webhook);
+      await this.updateOrderStates({ paymentId, paymentState: "Failed" });
+      return comment;
+    }
+    if (!refundTid) {
+      return this.handlePreCreditPartialRefund(webhook);
+    }
+    if (!refundTid) throw new Error("Missing refund reference");
 
     const payment = (
       await projectApiRoot
@@ -2548,7 +2654,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         customObject.value?.creditedAmount ?? 0,
       );
 
-    } catch {
+    } catch (error: any) {
+      const status = error?.statusCode ?? error?.status ?? error?.body?.statusCode;
+      if (status !== 404) throw error;
       log.info("[CREDIT] No existing credit state found", {
         paymentId,
         key,
@@ -2560,6 +2668,14 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         currency !== payment.amountPlanned.currencyCode) {
       throw new Error("Invalid credit TID, amount or currency");
     }
+    const preCreditRefundedAmount = Number(customObject?.value?.preCreditRefundedAmount ?? 0);
+    if (!Number.isSafeInteger(preCreditRefundedAmount) || preCreditRefundedAmount < 0 ||
+        preCreditRefundedAmount >= plannedAmount ||
+        !Number.isSafeInteger(creditedAmount) || creditedAmount < 0) {
+      throw new Error("Invalid stored pre-credit refund or credit amount");
+    }
+    const remainingPayable = plannedAmount - preCreditRefundedAmount;
+    if (creditedAmount > remainingPayable) throw new Error("Credit exceeds remaining payable amount");
     const creditEvents: Record<string, number> = {
       ...(customObject?.value?.creditEvents ?? {}),
     };
@@ -2568,22 +2684,23 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     }
     if (creditEvents[eventTID] == null) {
       creditedAmount += creditAmount;
-      if (creditedAmount > plannedAmount) throw new Error("Credit exceeds planned amount");
+      if (creditedAmount > remainingPayable) throw new Error("Credit exceeds remaining payable amount");
       creditEvents[eventTID] = creditAmount;
       await customObjectService.upsert(container, key, {
         ...(customObject?.value ?? {}), creditedAmount, creditEvents,
       });
     }
 
-    const fullyPaid = creditedAmount >= plannedAmount;
+    const fullyPaid = creditedAmount === remainingPayable;
 
     log.info("[CREDIT] Credit calculation", {
       paymentId,
       currentCredit: creditAmount,
       totalCredited: creditedAmount,
       plannedAmount,
+      preCreditRefundedAmount,
       remainingAmount: Math.max(
-        plannedAmount - creditedAmount,
+        remainingPayable - creditedAmount,
         0,
       ),
       fullyPaid,
@@ -2676,7 +2793,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       creditedAmount,
       plannedAmount,
       remainingAmount: Math.max(
-        plannedAmount - creditedAmount,
+        remainingPayable - creditedAmount,
         0,
       ),
       fullyPaid,
@@ -3759,14 +3876,15 @@ private buildTransactionComments(
     case "TRANSACTION_REFUND":
       return t(locale, "callback.refundComment", {
         eventTID: parentTID,
-        refundTID: eventTID,
         refundedAmount: (
           Number(webhook.transaction?.refund?.amount ?? 0) / 100
         ).toFixed(2),
         currency:
           webhook.transaction?.refund?.currency ??
           webhook.transaction?.currency,
-      });
+      }) + (webhook.transaction?.refund?.tid
+        ? t(locale, "callback.refundTidSuffix", { refundTID: eventTID })
+        : "");
 
     case "CREDIT": {
 	  return t(locale, "callback.creditComment", {
