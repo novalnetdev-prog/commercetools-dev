@@ -19,12 +19,19 @@ import { log } from "../libs/logger";
 import { getConfig } from "../config/config";
 import { Buffer } from "node:buffer";
 import JSONbig from "json-bigint";
+import { isIP } from "node:net";
 
 
 type PaymentRoutesOptions = {
   paymentService: NovalnetPaymentService;
   sessionHeaderAuthHook: SessionHeaderAuthenticationHook;
 };
+function customerIpFromRequest(request: FastifyRequest): string | undefined {
+  const forwarded = request.headers["x-forwarded-for"];
+  const first = (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim();
+  if (first && isIP(first)) return first;
+  return isIP(request.ip) ? request.ip : undefined;
+}
 export const paymentRoutes = async (
   fastify: FastifyInstance,
   opts: FastifyPluginOptions & PaymentRoutesOptions,
@@ -52,6 +59,7 @@ export const paymentRoutes = async (
 
         const resp = await opts.paymentService.createDirectPayment({
           data: request.body,
+          customerIp: customerIpFromRequest(request),
         });
 
         log.info("Direct payment response", {
@@ -107,6 +115,7 @@ export const paymentRoutes = async (
         });
         const resp = await opts.paymentService.createRedirectPayment({
           data: request.body,
+          customerIp: customerIpFromRequest(request),
         });
         log.info("Redirect payment response", {
           transactionStatus: resp?.transactionStatus,
