@@ -3931,6 +3931,8 @@ private buildTransactionComments(
           return t(locale, "callback.amountUpdateComment", {
             eventTID,
             formattedAmount,
+			date,
+	    	time,
           });
 
         case "DUE_DATE":
