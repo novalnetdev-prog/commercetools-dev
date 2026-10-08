@@ -44,13 +44,15 @@ import type {
   NovalnetOrderStates,
 } from "./novalnet-order-state.service";
 import { bankTransferDetails, bankTransferReference, buildPayPalCartInfo,
-  getNovalnetSystemInfo, updateBankTransferReference } from "../utils/novalnet-request";
+  formatNovalnetAmount, getNovalnetSystemInfo, mergeInitialPaymentComments,
+  updateBankTransferReference } from "../utils/novalnet-request";
 
 type NovalnetConfig = {
   testMode: string;
   paymentAction: string;
   dueDate: string;
   minimumAmount: string;
+  minimumOrderAmount: string;
   enforce3d: string;
   displayInline: string;
   forceNonGuarantee: string;
@@ -77,6 +79,7 @@ function getNovalnetConfigValues(
     paymentAction: String(config?.[`novalnet_${upperType}_PaymentAction`]),
     dueDate: String(config?.[`novalnet_${upperType}_DueDate`]),
     minimumAmount: String(config?.[`novalnet_${upperType}_MinimumAmount`]),
+    minimumOrderAmount: String(config?.[`novalnet_${upperType}_MinimumOrderAmount`] ?? "999"),
     enforce3d: String(config?.[`novalnet_${upperType}_Enforce3d`]),
     displayInline: String(config?.[`novalnet_${upperType}_DisplayInline`]),
     forceNonGuarantee: String(
@@ -554,6 +557,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       paymentAction,
       dueDate,
       minimumAmount,
+      minimumOrderAmount,
       enforce3d,
       displayInline,
       forceNonGuarantee,
@@ -613,7 +617,10 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         parsedCart?.taxedPrice?.totalGross?.centAmount ?? 0,
       );
       
-      const amountValid = orderTotal >= 999;
+      const configuredMinimum = Number(minimumOrderAmount);
+      const guaranteeMinimum = Number.isFinite(configuredMinimum) && configuredMinimum > 0
+        ? Math.max(999, configuredMinimum) : 999;
+      const amountValid = orderTotal >= guaranteeMinimum;
 
       const countryAllowed =
         billingCountry &&
@@ -631,13 +638,13 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         !Number.isNaN(Number(forceNonGuarantee)) &&
         Number(forceNonGuarantee) !== 0;
 
-      if (!guaranteePayment && !isForceNonGuarantee) {
+      if (!guaranteePayment && !isForceNonGuarantee && amountValid) {
         throw new Error(
         "Guaranteed payment is not available. Please choose another payment method."
         );
       }
 		
-      if (isForceNonGuarantee && !guaranteePayment) {
+      if (!guaranteePayment && (isForceNonGuarantee || !amountValid)) {
         if (paymentType === "GUARANTEED_DIRECT_DEBIT_SEPA") {
           transaction.payment_type = "DIRECT_DEBIT_SEPA";
         }
@@ -1360,6 +1367,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     statusCode,
     state,
     appendComments = true,
+    replaceInitialComments = false,
     avoidDuplicateComment = false,
     bankReferenceLocale,
     bankReferenceTransaction,
@@ -1374,6 +1382,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     statusCode?: string;
     state?: "Initial" | "Pending" | "Success" | "Failure";
     appendComments?: boolean;
+    replaceInitialComments?: boolean;
     avoidDuplicateComment?: boolean;
     bankReferenceLocale?: SupportedLocale;
     bankReferenceTransaction?: Record<string, any>;
@@ -1442,7 +1451,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
           currency: bankReferenceTransaction.currency ?? tx.amount?.currencyCode,
         }, bankReferenceLocale)
       : existingComments;
-    const finalComments = avoidDuplicateComment && previousComments.includes(transactionComments)
+    const finalComments = replaceInitialComments
+      ? mergeInitialPaymentComments(previousComments, transactionComments)
+      : avoidDuplicateComment && previousComments.includes(transactionComments)
       ? previousComments
       : appendComments && previousComments
         ? `${previousComments}\n\n---\n${transactionComments}`
@@ -1581,6 +1592,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       paymentId,
       pspReference,
       transactionComments,
+      replaceInitialComments: String(webhook.event?.type ?? "").toUpperCase() === "PAYMENT",
       avoidDuplicateComment,
       statusCode: statusCodeOverride ?? webhook.transaction?.status_code,
       state: effectiveState,
@@ -1888,6 +1900,10 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     const currentComments =
       tx.custom?.fields?.transactionComments ?? "";
+    const initialComments = novalnetStatus === "FAILURE" && currentComments &&
+      !currentComments.includes("N/A")
+      ? String(currentComments).split("\n\n---\n")[0]
+      : transactionComments;
 
     const currentInterfaceCode =
       payment.paymentStatus?.interfaceCode ?? "";
@@ -1910,22 +1926,11 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         transactionState: tx.state,
       });
 
-      if (novalnetStatus === "FAILURE") {
-        await this.updatePaymentTransaction({
-          paymentId, pspReference, transactionComments,
-          statusCode: newInterfaceCode, state: "Failure", setCustomType: true,
-        });
-      }
-      const bankDetails = webhook.transaction?.bank_details;
-      const bankComment = bankTransferDetails(webhook.transaction ?? {}, locale);
-      if (bankDetails && bankComment && !currentComments.includes(bankComment)) {
-        await this.updatePaymentTransaction({
-          paymentId, pspReference,
-          transactionComments: bankComment,
-          statusCode: newInterfaceCode, changeTransactionState: false,
-          setCustomType: true,
-        });
-      }
+      await this.updatePaymentTransaction({
+        paymentId, pspReference, transactionComments: initialComments,
+        replaceInitialComments: true,
+        statusCode: newInterfaceCode, state: mapped.state, setCustomType: true,
+      });
 
       await this.syncPaymentToOrder(paymentId, pspReference);
 
@@ -1934,7 +1939,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     await this.processWebhookTransaction({
       webhook,
-      transactionComments,
+      transactionComments: initialComments,
       state: mapped.state,
     });
 
@@ -3134,6 +3139,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     const {
       testMode,
       paymentAction,
+      minimumAmount,
       enforce3d,
     } = getNovalnetConfigValues(
       type,
@@ -3527,11 +3533,20 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       },
     };
 
+    const authorizationMinimum = Number(minimumAmount);
+    const orderAmount = Number(parsedCart?.taxedPrice?.totalGross?.centAmount ?? 0);
+    const authorizePayPal = type.toUpperCase() === "PAYPAL" &&
+      paymentAction?.toLowerCase() === "authorize" &&
+      Number.isFinite(authorizationMinimum) &&
+      (authorizationMinimum <= 0 || orderAmount >= authorizationMinimum);
+
     let parsedResponse: any = {};
 
     try {
       parsedResponse = await this.callNovalnet(
-        "https://payport.novalnet.de/v2/payment",
+        authorizePayPal
+          ? "https://payport.novalnet.de/v2/authorize"
+          : "https://payport.novalnet.de/v2/payment",
         novalnetPayload,
       );
     } catch (err) {
@@ -3882,12 +3897,11 @@ private buildTransactionComments(
     case "TRANSACTION_REFUND":
       return t(locale, "callback.refundComment", {
         eventTID: parentTID,
-        refundedAmount: (
-          Number(webhook.transaction?.refund?.amount ?? 0) / 100
-        ).toFixed(2),
-        currency:
-          webhook.transaction?.refund?.currency ??
-          webhook.transaction?.currency,
+        formattedAmount: formatNovalnetAmount(
+          webhook.transaction?.refund?.amount ?? 0,
+          String(webhook.transaction?.refund?.currency ?? webhook.transaction?.currency ?? "EUR"),
+          locale,
+        ),
       }) + (webhook.transaction?.refund?.tid
         ? t(locale, "callback.refundTidSuffix", { refundTID: eventTID })
         : "");
@@ -3895,10 +3909,9 @@ private buildTransactionComments(
     case "CREDIT": {
 	  return t(locale, "callback.creditComment", {
 	    parentTID,
-	    amount: (
-	      Number(webhook.transaction?.amount ?? 0) / 100
-	    ).toFixed(2),
-	    currency: webhook.transaction?.currency ?? "",
+	    formattedAmount: formatNovalnetAmount(
+	      webhook.transaction?.amount ?? 0, String(webhook.transaction?.currency ?? "EUR"), locale,
+	    ),
 	    date,
 	    time,
 	    transactionID: eventTID,
@@ -3910,24 +3923,22 @@ private buildTransactionComments(
         webhook.transaction?.update_type ?? "",
       ).toUpperCase();
 
-      const formattedAmount = (
-        Number(webhook.transaction?.amount ?? 0) / 100
-      ).toFixed(2);
+      const formattedAmount = formatNovalnetAmount(
+        webhook.transaction?.amount ?? 0, String(webhook.transaction?.currency ?? "EUR"), locale,
+      );
 
       switch (updateType) {
         case "AMOUNT":
           return t(locale, "callback.amountUpdateComment", {
             eventTID,
-            amount: formattedAmount,
-            currency: webhook.transaction?.currency,
+            formattedAmount,
           });
 
         case "DUE_DATE":
         case "AMOUNT_DUE_DATE":
           return t(locale, "callback.dueDateUpdateComment", {
             eventTID,
-            amount: formattedAmount,
-            currency: webhook.transaction?.currency,
+            formattedAmount,
             dueDate: String(webhook.transaction?.due_date ?? ""),
           });
 
@@ -3947,10 +3958,9 @@ private buildTransactionComments(
     case "REVERSAL":
       return t(locale, "callback.chargebackComment", {
       parentTID,
-      amount: (
-        Number(webhook.transaction?.amount ?? 0) / 100
-      ).toFixed(2),
-      currency: webhook.transaction?.currency ?? "",
+      formattedAmount: formatNovalnetAmount(
+        webhook.transaction?.amount ?? 0, String(webhook.transaction?.currency ?? "EUR"), locale,
+      ),
       date,
       time,
       eventTID,
