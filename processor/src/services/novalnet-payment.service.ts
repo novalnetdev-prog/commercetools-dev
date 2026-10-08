@@ -816,6 +816,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       },
       transaction,
       custom: {
+        lang: String(lang).toUpperCase(),
         input1: "ctpayment-id",
         inputval1: String(ctPayment.id ?? "ctpayment-id not available"),
         input2: "pspReference",
@@ -3506,6 +3507,8 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       }),
 
       custom: {
+        lang: 
+          String(lang).toUpperCase(),
         input1:
           "ctpayment-id",
 
