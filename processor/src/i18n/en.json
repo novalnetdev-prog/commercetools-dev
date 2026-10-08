@@ -66,7 +66,7 @@
     "paymentRemainderComment": "Payment Reminder {{reminderIndex}} has been sent to the customer.",
     "collectionSubmissionComment": "The transaction has been submitted to the collection agency. Collection Reference: {{collectionReference}}",
     "chargebackComment": "Chargeback executed successfully for the TID: {{parentTID}} amount: {{formattedAmount}} on {{date}} {{time}}. The subsequent TID: {{eventTID}}.",
-    "amountUpdateComment": "Transaction updated successfully for the TID: {{eventTID}} with amount {{formattedAmount}}.",
+    "amountUpdateComment": "Transaction updated successfully for the TID: {{eventTID}} with amount {{formattedAmount}} on {{date}} at {{time}}.",
     "dueDateUpdateComment": "Transaction updated successfully for the TID: {{eventTID}} with amount {{formattedAmount}} and due date {{dueDate}}."
   }
 }
