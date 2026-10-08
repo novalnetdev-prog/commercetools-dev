@@ -32,6 +32,21 @@ export function formatNovalnetAmount(amount: unknown, currency: string, locale: 
   }).format(cents / 100);
 }
 
+const paymentCommentSeparator = "\n\n---\n";
+
+export function mergeInitialPaymentComments(existing: string, initial: string): string {
+  const blocks = existing.split(paymentCommentSeparator).filter(Boolean);
+  const initialId = initial.split("\n", 1)[0];
+  const isInitial = (block: string) =>
+    /^(Novalnet Transaction ID:|Novalnet Transaktions-ID:)/.test(block) ||
+    block.startsWith(initialId);
+  const previousInitial = blocks.find(isInitial) ?? "";
+
+  const canonical = !initial.includes("IBAN:") && previousInitial.includes("IBAN:") &&
+    previousInitial.startsWith(initialId) ? previousInitial : initial;
+  return [canonical, ...blocks.filter((block) => !isInitial(block))].join(paymentCommentSeparator);
+}
+
 export function bankTransferReference(transaction: Record<string, any>, locale: SupportedLocale): string {
   const currency = String(transaction.currency ?? "EUR");
   const dueDate = /^\d{4}-\d{2}-\d{2}$/.test(String(transaction.due_date ?? ""))
