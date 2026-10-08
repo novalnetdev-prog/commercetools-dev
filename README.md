@@ -95,6 +95,25 @@ The **Processor** is the backend middleware responsible for:
 
 ## Payment Flow
 
+### Connector overview
+
+```mermaid
+flowchart TD
+    shopper["Shopper"] --> checkout["commercetools Checkout"]
+    checkout --> enabler["Novalnet enabler assets"]
+    enabler --> processor["Novalnet processor"]
+    processor --> gateway["Novalnet API"]
+    processor --> commerce["commercetools Payments"]
+    checkout --> orders["commercetools Orders"]
+    gateway --> callback["Return and webhook events"]
+    callback --> processor
+    processor --> orders
+```
+
+Checkout creates the Order. The initial `PAYMENT` webhook reconciles its financial state after the Order exists. The return route records redirect success or failure; capture, cancel, credit, and refund events update the relevant transactions. Payment Intent requests call the processor directly for merchant initiated capture, cancel, and refund operations. Order fulfillment state remains with the merchant's order process.
+
+For a gateway decline, the enabler displays the Novalnet reason in its own accessible alert and still invokes Checkout's `onError` callback. Checkout can also show its generic error message. A failed redirect returns to `/checkout` with a short lived `novalnetPaymentError` URL parameter; the enabler displays and removes that parameter when it initializes.
+
 ### Direct Payment
 
 Used for payment methods such as Credit Card, SEPA, ACH, Invoice, and Guaranteed payments.
