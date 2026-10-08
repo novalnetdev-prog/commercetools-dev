@@ -15,6 +15,7 @@ import {
 } from "../../../dtos/novalnet-payment.dto";
 
 import { BaseOptions } from "../../../payment-enabler/novalnet-payment-enabler";
+import { sepaMandateTemplate } from "../sepa-mandate";
 
 declare global {
   interface Window {
@@ -577,6 +578,8 @@ export class GuaranteedSepa extends BaseComponent {
               style="padding:12px 14px;border:1px solid #d4d4d4;border-radius:6px;font-size:15px;"
             />
           </div>
+
+          ${sepaMandateTemplate(locale)}
 
           ${payButton}
 
