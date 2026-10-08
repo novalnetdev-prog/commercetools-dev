@@ -34,6 +34,7 @@ import {
   createTransactionCommentsType,
 } from "../utils/custom-fields";
 import { projectApiRoot } from "../utils/ct-client";
+import { redirectFailureResponse } from "../utils/redirect-failure";
 import customObjectService from "./ct-custom-object.service";
 import { getPaymentMethodName, getPaymentMethodNames, SupportedLocale, t } from "../i18n";
 import { PaymentUpdateAction } from "@commercetools/platform-sdk";
@@ -3580,12 +3581,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         },
       );
 
-      throw new Error(
-        parsedResponse
-          ?.result
-          ?.status_text ||
-          "Payment initialization failed",
-      );
+      return redirectFailureResponse(ctPaymentId, parsedResponse)!;
     }
 
     const redirectUrl =
