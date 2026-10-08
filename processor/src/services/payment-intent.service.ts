@@ -16,6 +16,7 @@ import {
 } from "../utils/custom-fields";
 import customObjectService from "./ct-custom-object.service";
 import { mapNovalnetOrderStates } from "./novalnet-order-state.service";
+import { formatNovalnetAmount } from "../utils/novalnet-request";
 
 const BASE_URL = "https://payport.novalnet.de/v2";
 type Action = PaymentIntentRequestSchemaDTO["actions"][number];
@@ -183,8 +184,7 @@ function commentFor(kind: Modification, payment: Payment, reference: Reference,
     return t(locale, "callback.refundComment", {
       eventTID: reference.tid,
       refundTID: String(refundTid ?? ""),
-      refundedAmount: (amount / 100).toFixed(2),
-      currency: payment.amountPlanned.currencyCode,
+      formattedAmount: formatNovalnetAmount(amount, payment.amountPlanned.currencyCode, locale),
     });
   }
   const now = new Date();
