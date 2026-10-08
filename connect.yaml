@@ -75,6 +75,10 @@ deployAs:
         - key: NOVALNET_GUARANTEED_INVOICE_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
           required: false
+        - key: NOVALNET_GUARANTEED_INVOICE_MINIMUM_ORDER_AMOUNT
+          description: Enter the minimum amount (in cents) for the transaction to be processed with payment guarantee. For example, enter 100 which is equal to 1,00. By default, the amount will be 9,99 EUR (Default=999)
+          required: false
+          default: "999"
         - key: NOVALNET_GUARANTEED_SEPA_TEST_MODE
           description: The payment will be processed in the test mode therefore amount for this transaction will not be charged (1=Test, 0=Live)
           required: false
@@ -89,6 +93,10 @@ deployAs:
         - key: NOVALNET_GUARANTEED_SEPA_PAYMENT_ACTION_MINIMUM_AMOUNT
           description: In case the order amount exceeds the mentioned limit, the transaction will be set on-hold till your confirmation of the transaction. Configure Authorize as payment action and leave the field empty if you wish to process all the transactions as on-hold. (in minimum unit of currency. E.g. enter 100 which is equal to 1.00)
           required: false
+        - key: NOVALNET_GUARANTEED_SEPA_MINIMUM_ORDER_AMOUNT
+          description: Enter the minimum amount (in cents) for the transaction to be processed with payment guarantee. For example, enter 100 which is equal to 1,00. By default, the amount will be 9,99 EUR (Default=999)
+          required: false
+          default: "999"
         - key: NOVALNET_PREPAYMENT_TEST_MODE
           description: The payment will be processed in the test mode therefore amount for this transaction will not be charged (1=Test, 0=Live)
           required: false
