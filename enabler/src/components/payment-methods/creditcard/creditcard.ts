@@ -396,6 +396,12 @@ export class Creditcard extends BaseComponent {
         const data =
           await response.json();
 
+        if (String(data?.transactionStatus ?? "").toUpperCase() === "FAILURE") {
+          this.onError(data?.transactionStatusText || "Payment failed. Please try again.",
+            { paymentReference: data?.paymentReference });
+          return;
+        }
+
         console.log(
           "[CC] Redirect payment response received",
           {
