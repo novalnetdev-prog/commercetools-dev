@@ -27,6 +27,7 @@ import { SepaBuilder } from "../components/payment-methods/sepa/sepa";
 import { AchBuilder } from "../components/payment-methods/ach/ach";
 import { CreditcardBuilder } from "../components/payment-methods/creditcard/creditcard";
 import { FakeSdk } from "../fake-sdk";
+import { showPaymentError, showReturnedPaymentError } from './payment-error';
 import {
   EnablerOptions,
   PaymentComponentBuilder,
@@ -60,6 +61,7 @@ export class NovalnetPaymentEnabler implements PaymentEnabler {
   private static _Setup = async (
     options: EnablerOptions
   ): Promise<{ baseOptions: BaseOptions }> => {
+    showReturnedPaymentError();
     // Fetch SDK config from processor if needed, for example:
 
     // const configResponse = await fetch(instance.processorUrl + '/config', {
@@ -82,7 +84,10 @@ export class NovalnetPaymentEnabler implements PaymentEnabler {
         environment: sdkOptions.environment,
         locale: options.locale,
         onComplete: options.onComplete || (() => {}),
-        onError: options.onError || (() => {}),
+        onError: (error, context) => {
+          showPaymentError(error);
+          options.onError?.(error, context);
+        },
       },
     });
   };
