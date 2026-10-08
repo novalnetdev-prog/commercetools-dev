@@ -16,6 +16,7 @@ import {
 } from '../../../dtos/novalnet-payment.dto';
 
 import { BaseOptions } from '../../../payment-enabler/novalnet-payment-enabler';
+import { sepaMandateTemplate } from '../sepa-mandate';
 
 const NOVALNET_UTILITY_CDN =
   'https://cdn.novalnet.de/js/v2/NovalnetUtility-1.1.2.js';
@@ -857,6 +858,8 @@ export class Sepa extends BaseComponent {
             />
 
           </div>
+
+          ${sepaMandateTemplate(locale)}
 
           ${payButton}
 
