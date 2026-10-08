@@ -88,6 +88,8 @@ export const config = {
     process.env.NOVALNET_GUARANTEED_INVOICE_PAYMENT_ACTION || "",
   novalnet_GUARANTEED_INVOICE_MinimumAmount:
     process.env.NOVALNET_GUARANTEED_INVOICE_PAYMENT_ACTION_MINIMUM_AMOUNT || "0",
+  novalnet_GUARANTEED_INVOICE_MinimumOrderAmount:
+    process.env.NOVALNET_GUARANTEED_INVOICE_MINIMUM_ORDER_AMOUNT || "999",
   novalnet_GUARANTEED_INVOICE_Allowb2bCustomers:
     process.env.NOVALNET_GUARANTEED_INVOICE_ALLOW_B2B_CUSTOMERS || "0",
   novalnet_GUARANTEED_INVOICE_ForceNonGuarantee:
@@ -99,6 +101,8 @@ export const config = {
     process.env.NOVALNET_GUARANTEED_SEPA_PAYMENT_ACTION || "",
   novalnet_GUARANTEED_DIRECT_DEBIT_SEPA_MinimumAmount:
     process.env.NOVALNET_GUARANTEED_SEPA_PAYMENT_ACTION_MINIMUM_AMOUNT || "0",
+  novalnet_GUARANTEED_DIRECT_DEBIT_SEPA_MinimumOrderAmount:
+    process.env.NOVALNET_GUARANTEED_SEPA_MINIMUM_ORDER_AMOUNT || "999",
   novalnet_GUARANTEED_DIRECT_DEBIT_SEPA_Allowb2bCustomers:
     process.env.NOVALNET_GUARANTEED_SEPA_ALLOW_B2B_CUSTOMERS || "0",
   novalnet_GUARANTEED_DIRECT_DEBIT_SEPA_ForceNonGuarantee:
