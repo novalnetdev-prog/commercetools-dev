@@ -130,7 +130,11 @@ export const paymentRoutes = async (
           stack: error instanceof Error ? error.stack : undefined,
           name: error instanceof Error ? error.name : undefined,
         });
-        return reply.status(500).send({ paymentReference: "error" });
+        return reply.status(500).send({
+          paymentReference: "",
+          transactionStatus: "FAILURE",
+          transactionStatusText: "Payment initialization failed",
+        });
       }
     },
   );
@@ -177,7 +181,7 @@ export const paymentRoutes = async (
           };
 
           const jsonBody = JSON.stringify(requestData);
-          const result = await opts.paymentService.transactionUpdate({
+          await opts.paymentService.transactionUpdate({
             data: jsonBody,
           });
 
@@ -249,9 +253,13 @@ export const paymentRoutes = async (
       };
 
       const jsonBody = JSON.stringify(requestData);
-      const result = await opts.paymentService.failureResponse({
+      await opts.paymentService.failureResponse({
         data: jsonBody, // send JSON string
       });
+      redirectUrl.searchParams.set(
+        "novalnetPaymentError",
+        String(query.status_text || "Payment failed. Please try again.").slice(0, 500),
+      );
       return reply.code(302).redirect(redirectUrl.toString());
     } catch (error) {
       log.error("Error processing payment:", error);
