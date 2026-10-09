@@ -1,23 +1,5 @@
 const QUERY_PARAMETER = 'novalnetPaymentError';
 const ALERT_ID = 'novalnet-payment-error';
-let paymentContainer: Element | null = null;
-
-export function setPaymentErrorContainer(selector: string): void {
-
-  paymentContainer = selector.startsWith('#')
-    ? document.getElementById(selector.slice(1))
-    : null;
-  if (!paymentContainer) {
-    try {
-      paymentContainer = document.querySelector(selector);
-    } catch {
-      // Error display must never prevent the payment component from mounting.
-      paymentContainer = null;
-    }
-  }
-  const alert = document.getElementById(ALERT_ID);
-  if (alert && paymentContainer) paymentContainer.prepend(alert);
-}
 
 export function clearPaymentError(): void {
   document.getElementById(ALERT_ID)?.remove();
@@ -37,17 +19,19 @@ export function showPaymentError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error ?? '');
   if (!message.trim()) return;
 
-  const container = paymentContainer?.isConnected ? paymentContainer : document.body;
   let alert = document.getElementById(ALERT_ID);
   if (!alert) {
     alert = document.createElement('div');
     alert.id = ALERT_ID;
     alert.setAttribute('role', 'alert');
     alert.style.cssText =
-      'padding:12px 16px;margin:12px 0;border:1px solid #c62828;border-radius:4px;color:#8e1616;background:#fff4f4;';
+      'position:fixed;top:16px;right:16px;z-index:2147483647;box-sizing:border-box;' +
+      'width:calc(100% - 32px);max-width:420px;padding:12px 16px;' +
+      'border:1px solid #c62828;border-radius:4px;color:#8e1616;' +
+      'background:#fff4f4;box-shadow:0 3px 12px rgba(0,0,0,.2);';
   }
 
-  container.prepend(alert);
+  document.body.append(alert);
 
   alert.textContent = message.slice(0, 500);
 }
