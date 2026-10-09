@@ -16,6 +16,7 @@ import {
 } from "../../../dtos/novalnet-payment.dto";
 
 import { BaseOptions } from "../../../payment-enabler/novalnet-payment-enabler";
+import { readProcessorPaymentError } from "../../../payment-enabler/payment-error";
 
 type CardTokenData = {
   hash: string;
@@ -380,16 +381,8 @@ export class Creditcard extends BaseComponent {
           );
 
         if (!response.ok) {
-          const errorText =
-            await response.text();
-
-          console.error(
-            "[CC] error:",
-            errorText,
-          );
-
           throw new Error(
-            `Redirect payment failed. HTTP ${response.status}`,
+            await readProcessorPaymentError(response, `Redirect payment failed. HTTP ${response.status}`),
           );
         }
 
@@ -443,16 +436,8 @@ export class Creditcard extends BaseComponent {
         );
 
       if (!response.ok) {
-        const errorText =
-          await response.text();
-
-        console.error(
-          "[CC] error:",
-          errorText,
-        );
-
         throw new Error(
-          `Direct payment failed. HTTP ${response.status}`,
+          await readProcessorPaymentError(response, `Direct payment failed. HTTP ${response.status}`),
         );
       }
 
