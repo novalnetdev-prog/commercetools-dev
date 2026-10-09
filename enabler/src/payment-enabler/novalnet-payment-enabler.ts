@@ -27,9 +27,10 @@ import { SepaBuilder } from "../components/payment-methods/sepa/sepa";
 import { AchBuilder } from "../components/payment-methods/ach/ach";
 import { CreditcardBuilder } from "../components/payment-methods/creditcard/creditcard";
 import { FakeSdk } from "../fake-sdk";
-import { showPaymentError, showReturnedPaymentError } from './payment-error';
+import { clearPaymentError, setPaymentErrorContainer, showPaymentError, showReturnedPaymentError } from './payment-error';
 import {
   EnablerOptions,
+  ComponentOptions,
   PaymentComponentBuilder,
   PaymentEnabler,
   PaymentResult,
@@ -83,7 +84,10 @@ export class NovalnetPaymentEnabler implements PaymentEnabler {
         sessionId: options.sessionId,
         environment: sdkOptions.environment,
         locale: options.locale,
-        onComplete: options.onComplete || (() => {}),
+        onComplete: (result) => {
+          clearPaymentError();
+          options.onComplete?.(result);
+        },
         onError: (error, context) => {
           showPaymentError(error);
           options.onError?.(error, context);
@@ -184,7 +188,19 @@ export class NovalnetPaymentEnabler implements PaymentEnabler {
       throw new Error(`Unsupported payment type: ${type}`);
     }
   
-    return new Builder(baseOptions);
+    const builder: PaymentComponentBuilder = new Builder(baseOptions);
+    return {
+      componentHasSubmit: builder.componentHasSubmit,
+      build(config: ComponentOptions) {
+        const component = builder.build(config);
+        const mount = component.mount.bind(component);
+        component.mount = (selector: string) => {
+          setPaymentErrorContainer(selector);
+          return mount(selector);
+        };
+        return component;
+      },
+    };
   }
 
 }
