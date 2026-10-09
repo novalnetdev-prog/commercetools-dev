@@ -632,18 +632,16 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         !Number.isNaN(Number(forceNonGuarantee)) &&
         Number(forceNonGuarantee) !== 0;
 
-      if (!guaranteePayment && !isForceNonGuarantee && amountValid) {
-        throw new CheckoutPaymentError(
-        "Payment conditions were not met. Please choose another payment method."
-        );
-      }
-		
-      if (!guaranteePayment && (isForceNonGuarantee || !amountValid)) {
-        if (paymentType === "GUARANTEED_DIRECT_DEBIT_SEPA") {
-          transaction.payment_type = "DIRECT_DEBIT_SEPA";
+      if (!guaranteePayment) {
+        if (!isForceNonGuarantee) {
+          throw new CheckoutPaymentError(
+            "Payment conditions were not met. Please choose another payment method.",
+          );
         }
 
-        if (paymentType === "GUARANTEED_INVOICE") {
+        if (paymentType === "GUARANTEED_DIRECT_DEBIT_SEPA") {
+          transaction.payment_type = "DIRECT_DEBIT_SEPA";
+        } else if (paymentType === "GUARANTEED_INVOICE") {
           transaction.payment_type = "INVOICE";
         }
       }
