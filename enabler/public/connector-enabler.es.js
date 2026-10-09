@@ -1,7 +1,7 @@
 (function(){"use strict";(function(e,r){try{if(typeof document<"u"){var o=document.createElement("style");o.setAttribute("data-ctc-connector-styles","");for(const t in r.attributes)o.setAttribute(t,r.attributes[t]);o.appendChild(document.createTextNode(e)),document.head.appendChild(o)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})('._paymentForm_1jvri_36{margin-top:1rem}._row_1jvri_46{display:flex;flex-direction:row;gap:1rem;position:relative}._wrapper_1jvri_40 *{font-family:Roboto,sans-serif;box-sizing:border-box}._twoColumnLayout_1jvri_65{display:flex;flex-flow:row wrap;column-gap:1rem}._twoColumnLayout_1jvri_65>*{flex:1 0 150px}._container_1jvri_74{margin-top:1rem}._container_1jvri_74 iframe{height:3.317rem!important;border:1px solid #949494!important;border-radius:.25rem;padding-left:1rem;width:100%;float:none!important}._container_1jvri_74 ._input_1jvri_85{display:inline-block;position:relative;width:100%;margin-bottom:1rem}._container_1jvri_74 ._error_1jvri_91{color:#d32f2f;font-size:.75rem;padding:0 .75rem .25rem 1rem;position:rela2tive}.is-valid iframe{border:1px solid #949494!important}.is-onfocus iframe{border:2px solid #186ec3!important}.is-onfocus~._error_1jvri_91{display:none}.is-invalid iframe,._inputError_1jvri_111 :not(.is-onfocus) iframe,._inputErrorEmptyText_1jvri_112 iframe{border:2px solid #d32f2f!important}._floatingLabel_1jvri_117{position:absolute;pointer-events:none;left:.8rem;top:1rem;transition:.2s ease all;background-color:#fff;padding:0 .25rem;width:80%}._wrapper_1jvri_40{position:relative;width:100%;margin-bottom:1rem}._cardIcons_1jvri_134{display:none}.is-empty~._cardIcons_1jvri_134{display:block}.is-empty~._floatingCard_1jvri_142{display:none}.is-onfocus~._floatingLabel_1jvri_117,.is-valid~._floatingLabel_1jvri_117,.is-invalid:not(._inputEmpty_1jvri_148)~._floatingLabel_1jvri_117{top:-.5rem;font-size:.75rem;width:auto}.is-valid~._floatingLabel_1jvri_117{color:#949494}.is-onfocus~._floatingLabel_1jvri_117{color:#186ec3}.is-invalid:not(._inputEmpty_1jvri_148)~._floatingLabel_1jvri_117{color:#d32f2f}._inputErrorEmptyText_1jvri_112~._floatingLabel_1jvri_117{color:#000}._floatingCard_1jvri_142{position:absolute!important;pointer-events:none;right:0;top:0;transition:.2s ease all;background-color:#fff;padding:0 .25rem}._subHeading_1jvri_53{color:#5e6368;font-size:.8125rem;margin-top:.125rem;margin-bottom:1.5rem}._alert_1jvri_189{margin:1em 0}._cardRow_1jvri_193{display:flex;gap:.25rem;margin-top:.5rem}._cardIcon_1jvri_134{border:1px solid #d9d9d9;border-radius:.156rem}._hidden_1jvri_204{display:none}:root,:host{--ctc-button: #186ec3;--ctc-button-hover: color-mix(in srgb, var(--ctc-button), black 15%);--ctc-button-disabled: #e0e0e0;--ctc-button-text: #fff;--ctc-button-disabled-text: #a2a3a4}:root,:host{--ctc-radio: #186ec3}:root,:host{--ctc-checkbox: #186ec3}:root,:host{--ctc-input-field-focus: #186ec3}:root,:host{--ctc-font-family: "Roboto", sans-serif}@supports not (background: color-mix(in srgb,red 50%,blue)){:root{--ctc-button-hover: var(--ctc-button)}}._button_1eyp1_41{color:var(--ctc-button-text);padding:.5rem 1.375rem;background-color:var(--ctc-button);border:0 none;border-radius:.25rem;font-size:.9375rem;font-weight:400;font-family:var(--ctc-font-family);text-transform:uppercase;line-height:1.5rem;letter-spacing:.43px;box-shadow:0 2px 2px #00000024,0 3px 1px -2px #0000001f,0 1px 5px #0003;background-position:center;transition:background-color .8s;cursor:pointer}._button_1eyp1_41:hover{background:var(--ctc-button-hover) radial-gradient(circle,transparent 1%,var(--ctc-button-hover) 1%) center/15000%}._button_1eyp1_41:active{background-color:var(--ctc-button-hover);background-size:100%;transition:background-color 0s}._button_1eyp1_41:disabled{color:var(--ctc-button-disabled-text);background-color:var(--ctc-button-disabled);pointer-events:none;box-shadow:none}._button_1eyp1_41:disabled:hover,._button_1eyp1_41:disabled:active{background-color:var(--ctc-button-disabled);cursor:not-allowed}._fullWidth_1eyp1_77{width:100%}._linkButton_1eyp1_81{text-decoration:none;text-transform:unset;background:none;border-bottom:1.5px solid transparent;box-shadow:none;padding:0;border-radius:0;color:var(--ctc-button);font-size:1rem;font-weight:700;line-height:1.188rem;letter-spacing:.009rem}._linkButton_1eyp1_81:hover,._linkButton_1eyp1_81:active{cursor:pointer;border-bottom:1.5px solid var(--ctc-button);background:none}._linkButton_1eyp1_81._disabled_1eyp1_100{color:#a2a3a4;text-decoration:none;cursor:not-allowed;pointer-events:none;background-color:transparent;box-shadow:none}._linkButton_1eyp1_81._disabled_1eyp1_100:hover,._linkButton_1eyp1_81._disabled_1eyp1_100:active{border-bottom:none}._lowOpacityButton_1eyp1_112{background-color:color-mix(in srgb,var(--ctc-button),transparent 30%)}@supports not (background: color-mix(in srgb,red 50%,blue)){._lowOpacityButton_1eyp1_112{background-color:var(--ctc-button);opacity:60%}}._textButton_1eyp1_122{background-color:transparent;color:var(--ctc-button);box-shadow:none;padding:.5rem .6875rem}._textButton_1eyp1_122:hover{background:color-mix(in srgb,var(--ctc-button),transparent 90%) radial-gradient(circle,transparent 1%,color-mix(in srgb,var(--ctc-button),transparent 90%) 1%) center/15000%}._textButton_1eyp1_122:active{background-color:color-mix(in srgb,var(--ctc-button),transparent 90%);background-size:100%;transition:background-color 0s}._textButton_1eyp1_122:focus{background-color:color-mix(in srgb,var(--ctc-button),transparent 90%)}._textButton_1eyp1_122:disabled{background-color:transparent;color:#e0e0e0}._errorButton_1eyp1_144{color:#b52323;background:transparent;border:1px solid transparent;transition:none;box-shadow:none;outline:none}._errorButton_1eyp1_144:hover{background:#fbdada}._errorButton_1eyp1_144:active{border:1px solid #b52323;background:#ffc5c5}._errorButton_1eyp1_144:disabled{background-color:transparent;color:#e0e0e0}',{})})();
-var et = Object.defineProperty;
-var tt = (o, d, r) => d in o ? et(o, d, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[d] = r;
-var g = (o, d, r) => tt(o, typeof d != "symbol" ? d + "" : d, r);
+var Qe = Object.defineProperty;
+var et = (o, d, r) => d in o ? Qe(o, d, { enumerable: !0, configurable: !0, writable: !0, value: r }) : o[d] = r;
+var g = (o, d, r) => et(o, typeof d != "symbol" ? d + "" : d, r);
 var H = /* @__PURE__ */ ((o) => (o.applepay = "applepay", o.bancontactcard = "bcmc", o.eps = "eps", o.googlepay = "googlepay", o.ideal = "ideal", o.invoice = "invoice", o.paypal = "paypal", o.prepayment = "prepayment", o.GuaranteedInvoice = "GuaranteedInvoice", o.GuaranteedSepa = "GuaranteedSepa", o.twint = "twint", o.sepa = "sepa", o.ach = "ach", o.creditcard = "creditcard", o.onlinebanktransfer = "onlinebanktransfer", o.alipay = "alipay", o.bancontact = "bancontact", o.blik = "blik", o.mbway = "mbway", o.multibanco = "multibanco", o.postfinance = "postfinance", o.postfinancecard = "postfinancecard", o.przelewy24 = "przelewy24", o.trustly = "trustly", o.wechatpay = "wechatpay", o.pix = "pix", o.boleto = "boleto", o.bizum = "bizum", o.bancomat = "BANCOMATPAY", o.kakaopay = "kakaoPay", o.naverpay = "naverpay", o))(H || {});
 class D {
   constructor(d, r, e) {
@@ -25,15 +25,15 @@ class D {
     this.paymentCompleted || (this.paymentCompleted = !0, this.onComplete(d));
   }
 }
-const nt = "_wrapper_1jvri_40", B = {
-  wrapper: nt
-}, rt = "_button_1eyp1_41", ot = "_fullWidth_1eyp1_77", v = {
-  button: rt,
-  fullWidth: ot
+const tt = "_wrapper_1jvri_40", B = {
+  wrapper: tt
+}, nt = "_button_1eyp1_41", rt = "_fullWidth_1eyp1_77", v = {
+  button: nt,
+  fullWidth: rt
 };
-var xe = {}, He;
-function it() {
-  return He || (He = 1, function(o) {
+var Ae = {}, _e;
+function ot() {
+  return _e || (_e = 1, function(o) {
     Object.defineProperty(o, "__esModule", { value: !0 }), o.Type = o.StandardType = o.ExtendedTypeBuilder = o.StandardTypeBuilder = o.TypeBuilder = o.TemplateLiteralGenerator = o.TemplateLiteralFinite = o.TemplateLiteralParser = o.TemplateLiteralParserError = o.TemplateLiteralResolver = o.TemplateLiteralPattern = o.KeyResolver = o.ObjectMap = o.TypeClone = o.TypeExtends = o.TypeExtendsResult = o.ExtendsUndefined = o.TypeGuard = o.TypeGuardUnknownTypeError = o.FormatRegistry = o.TypeRegistry = o.PatternStringExact = o.PatternNumberExact = o.PatternBooleanExact = o.PatternString = o.PatternNumber = o.PatternBoolean = o.Kind = o.Hint = o.Modifier = void 0, o.Modifier = Symbol.for("TypeBox.Modifier"), o.Hint = Symbol.for("TypeBox.Hint"), o.Kind = Symbol.for("TypeBox.Kind"), o.PatternBoolean = "(true|false)", o.PatternNumber = "(0|[1-9][0-9]*)", o.PatternString = "(.*)", o.PatternBooleanExact = `^${o.PatternBoolean}$`, o.PatternNumberExact = `^${o.PatternNumber}$`, o.PatternStringExact = `^${o.PatternString}$`;
     var d;
     (function(h) {
@@ -50,8 +50,8 @@ function it() {
         return c.has(w);
       }
       h.Has = p;
-      function y(w, C) {
-        c.set(w, C);
+      function y(w, E) {
+        c.set(w, E);
       }
       h.Set = y;
       function T(w) {
@@ -72,8 +72,8 @@ function it() {
         return c.has(w);
       }
       h.Has = p;
-      function y(w, C) {
-        c.set(w, C);
+      function y(w, E) {
+        c.set(w, E);
       }
       h.Set = y;
       function T(w) {
@@ -121,7 +121,7 @@ function it() {
       function w(s) {
         return typeof s == "number" && globalThis.Number.isFinite(s);
       }
-      function C(s) {
+      function E(s) {
         return typeof s == "boolean";
       }
       function N(s) {
@@ -131,7 +131,7 @@ function it() {
         return s === void 0 || s !== void 0 && w(s);
       }
       function j(s) {
-        return s === void 0 || s !== void 0 && C(s);
+        return s === void 0 || s !== void 0 && E(s);
       }
       function R(s) {
         return s === void 0 || s !== void 0 && T(s);
@@ -142,17 +142,17 @@ function it() {
       function I(s) {
         return s === void 0 || s !== void 0 && T(s) && p(s);
       }
-      function K(s) {
+      function q(s) {
         return s === void 0 || ee(s);
       }
       function J(s) {
         return O(s) && s[o.Kind] === "Any" && R(s.$id);
       }
       h.TAny = J;
-      function q(s) {
+      function K(s) {
         return O(s) && s[o.Kind] === "Array" && s.type === "array" && R(s.$id) && ee(s.items) && $(s.minItems) && $(s.maxItems) && j(s.uniqueItems);
       }
-      h.TArray = q;
+      h.TArray = K;
       function M(s) {
         return O(s) && s[o.Kind] === "BigInt" && s.type === "null" && s.typeOf === "BigInt" && R(s.$id) && N(s.multipleOf) && N(s.minimum) && N(s.maximum) && N(s.exclusiveMinimum) && N(s.exclusiveMaximum);
       }
@@ -170,11 +170,11 @@ function it() {
         return !0;
       }
       h.TConstructor = Y;
-      function Te(s) {
+      function be(s) {
         return O(s) && s[o.Kind] === "Date" && s.type === "object" && s.instanceOf === "Date" && R(s.$id) && $(s.minimumTimestamp) && $(s.maximumTimestamp) && $(s.exclusiveMinimumTimestamp) && $(s.exclusiveMaximumTimestamp);
       }
-      h.TDate = Te;
-      function we(s) {
+      h.TDate = be;
+      function Te(s) {
         if (!(O(s) && s[o.Kind] === "Function" && s.type === "object" && s.instanceOf === "Function" && R(s.$id) && f(s.parameters) && ee(s.returns)))
           return !1;
         for (const X of s.parameters)
@@ -182,85 +182,85 @@ function it() {
             return !1;
         return !0;
       }
-      h.TFunction = we;
-      function fe(s) {
+      h.TFunction = Te;
+      function de(s) {
         return O(s) && s[o.Kind] === "Integer" && s.type === "integer" && R(s.$id) && $(s.multipleOf) && $(s.minimum) && $(s.maximum) && $(s.exclusiveMinimum) && $(s.exclusiveMaximum);
       }
-      h.TInteger = fe;
-      function ge(s) {
-        if (!(O(s) && s[o.Kind] === "Intersect" && f(s.allOf) && R(s.type) && (j(s.unevaluatedProperties) || K(s.unevaluatedProperties)) && R(s.$id)) || "type" in s && s.type !== "object")
+      h.TInteger = de;
+      function we(s) {
+        if (!(O(s) && s[o.Kind] === "Intersect" && f(s.allOf) && R(s.type) && (j(s.unevaluatedProperties) || q(s.unevaluatedProperties)) && R(s.$id)) || "type" in s && s.type !== "object")
           return !1;
         for (const X of s.allOf)
           if (!ee(X))
             return !1;
         return !0;
       }
-      h.TIntersect = ge;
+      h.TIntersect = we;
       function O(s) {
         return c(s) && o.Kind in s && typeof s[o.Kind] == "string";
       }
       h.TKind = O;
-      function le(s) {
-        return O(s) && s[o.Kind] === "Literal" && R(s.$id) && (T(s.const) || w(s.const) || C(s.const) || y(s.const));
+      function ce(s) {
+        return O(s) && s[o.Kind] === "Literal" && R(s.$id) && (T(s.const) || w(s.const) || E(s.const) || y(s.const));
       }
-      h.TLiteral = le;
-      function ye(s) {
+      h.TLiteral = ce;
+      function fe(s) {
         return O(s) && s[o.Kind] === "Never" && c(s.not) && globalThis.Object.getOwnPropertyNames(s.not).length === 0;
       }
-      h.TNever = ye;
-      function de(s) {
+      h.TNever = fe;
+      function le(s) {
         return O(s) && s[o.Kind] === "Not" && f(s.allOf) && s.allOf.length === 2 && c(s.allOf[0]) && ee(s.allOf[0].not) && ee(s.allOf[1]);
       }
-      h.TNot = de;
-      function pe(s) {
+      h.TNot = le;
+      function ye(s) {
         return O(s) && s[o.Kind] === "Null" && s.type === "null" && R(s.$id);
       }
-      h.TNull = pe;
-      function Se(s) {
+      h.TNull = ye;
+      function ge(s) {
         return O(s) && s[o.Kind] === "Number" && s.type === "number" && R(s.$id) && $(s.multipleOf) && $(s.minimum) && $(s.maximum) && $(s.exclusiveMinimum) && $(s.exclusiveMaximum);
       }
-      h.TNumber = Se;
-      function Pe(s) {
-        if (!(O(s) && s[o.Kind] === "Object" && s.type === "object" && R(s.$id) && c(s.properties) && (j(s.additionalProperties) || K(s.additionalProperties)) && $(s.minProperties) && $(s.maxProperties)))
+      h.TNumber = ge;
+      function Se(s) {
+        if (!(O(s) && s[o.Kind] === "Object" && s.type === "object" && R(s.$id) && c(s.properties) && (j(s.additionalProperties) || q(s.additionalProperties)) && $(s.minProperties) && $(s.maxProperties)))
           return !1;
         for (const [X, z] of Object.entries(s.properties))
           if (!p(X) || !ee(z))
             return !1;
         return !0;
       }
-      h.TObject = Pe;
-      function Be(s) {
+      h.TObject = Se;
+      function Pe(s) {
         return O(s) && s[o.Kind] === "Promise" && s.type === "object" && s.instanceOf === "Promise" && R(s.$id) && ee(s.item);
       }
-      h.TPromise = Be;
-      function ve(s) {
+      h.TPromise = Pe;
+      function Be(s) {
         if (!(O(s) && s[o.Kind] === "Record" && s.type === "object" && R(s.$id) && s.additionalProperties === !1 && c(s.patternProperties)))
           return !1;
         const X = Object.keys(s.patternProperties);
         return !(X.length !== 1 || !b(X[0]) || !ee(s.patternProperties[X[0]]));
       }
-      h.TRecord = ve;
-      function Ee(s) {
+      h.TRecord = Be;
+      function ve(s) {
         return O(s) && s[o.Kind] === "Ref" && R(s.$id) && T(s.$ref);
       }
-      h.TRef = Ee;
+      h.TRef = ve;
       function ae(s) {
         return O(s) && s[o.Kind] === "String" && s.type === "string" && R(s.$id) && $(s.minLength) && $(s.maxLength) && P(s.pattern) && I(s.format);
       }
       h.TString = ae;
-      function Ce(s) {
+      function Ee(s) {
         return O(s) && s[o.Kind] === "Symbol" && s.type === "null" && s.typeOf === "Symbol" && R(s.$id);
       }
-      h.TSymbol = Ce;
-      function me(s) {
+      h.TSymbol = Ee;
+      function pe(s) {
         return O(s) && s[o.Kind] === "TemplateLiteral" && s.type === "string" && T(s.pattern) && s.pattern[0] === "^" && s.pattern[s.pattern.length - 1] === "$";
       }
-      h.TTemplateLiteral = me;
+      h.TTemplateLiteral = pe;
       function V(s) {
         return O(s) && s[o.Kind] === "This" && R(s.$id) && T(s.$ref);
       }
       h.TThis = V;
-      function Ie(s) {
+      function Ce(s) {
         if (!(O(s) && s[o.Kind] === "Tuple" && s.type === "array" && R(s.$id) && w(s.minItems) && w(s.maxItems) && s.minItems === s.maxItems))
           return !1;
         if (s.items === void 0 && s.additionalItems === void 0 && s.minItems === 0)
@@ -272,11 +272,11 @@ function it() {
             return !1;
         return !0;
       }
-      h.TTuple = Ie;
-      function Ue(s) {
+      h.TTuple = Ce;
+      function Ie(s) {
         return O(s) && s[o.Kind] === "Undefined" && s.type === "null" && s.typeOf === "Undefined" && R(s.$id);
       }
-      h.TUndefined = Ue;
+      h.TUndefined = Ie;
       function ue(s) {
         if (!(O(s) && s[o.Kind] === "Union" && f(s.anyOf) && R(s.$id)))
           return !1;
@@ -286,40 +286,40 @@ function it() {
         return !0;
       }
       h.TUnion = ue;
-      function he(s) {
-        return ue(s) && s.anyOf.every((X) => le(X) && typeof X.const == "string");
+      function me(s) {
+        return ue(s) && s.anyOf.every((X) => ce(X) && typeof X.const == "string");
       }
-      h.TUnionLiteral = he;
+      h.TUnionLiteral = me;
       function re(s) {
         return O(s) && s[o.Kind] === "Uint8Array" && s.type === "object" && R(s.$id) && s.instanceOf === "Uint8Array" && $(s.minByteLength) && $(s.maxByteLength);
       }
       h.TUint8Array = re;
-      function Oe(s) {
+      function Ue(s) {
         return O(s) && s[o.Kind] === "Unknown" && R(s.$id);
       }
-      h.TUnknown = Oe;
-      function be(s) {
+      h.TUnknown = Ue;
+      function he(s) {
         return O(s) && s[o.Kind] === "Unsafe";
       }
-      h.TUnsafe = be;
-      function ke(s) {
+      h.TUnsafe = he;
+      function Oe(s) {
         return O(s) && s[o.Kind] === "Void" && s.type === "null" && s.typeOf === "Void" && R(s.$id);
       }
-      h.TVoid = ke;
-      function $e(s) {
+      h.TVoid = Oe;
+      function Le(s) {
         return c(s) && s[o.Modifier] === "ReadonlyOptional";
       }
-      h.TReadonlyOptional = $e;
-      function Ae(s) {
+      h.TReadonlyOptional = Le;
+      function Ne(s) {
         return c(s) && s[o.Modifier] === "Readonly";
       }
-      h.TReadonly = Ae;
-      function Re(s) {
+      h.TReadonly = Ne;
+      function $e(s) {
         return c(s) && s[o.Modifier] === "Optional";
       }
-      h.TOptional = Re;
+      h.TOptional = $e;
       function ee(s) {
-        return typeof s == "object" && (J(s) || q(s) || G(s) || M(s) || Y(s) || Te(s) || we(s) || fe(s) || ge(s) || le(s) || ye(s) || de(s) || pe(s) || Se(s) || Pe(s) || Be(s) || ve(s) || Ee(s) || ae(s) || Ce(s) || me(s) || V(s) || Ie(s) || Ue(s) || ue(s) || re(s) || Oe(s) || be(s) || ke(s) || O(s) && d.Has(s[o.Kind]));
+        return typeof s == "object" && (J(s) || K(s) || G(s) || M(s) || Y(s) || be(s) || Te(s) || de(s) || we(s) || ce(s) || fe(s) || le(s) || ye(s) || ge(s) || Se(s) || Pe(s) || Be(s) || ve(s) || ae(s) || Ee(s) || pe(s) || V(s) || Ce(s) || Ie(s) || ue(s) || re(s) || Ue(s) || he(s) || Oe(s) || O(s) && d.Has(s[o.Kind]));
       }
       h.TSchema = ee;
     })(e = o.TypeGuard || (o.TypeGuard = {})), function(h) {
@@ -355,7 +355,7 @@ function it() {
       function w(a, n) {
         return e.TLiteral(a) && typeof a.const == "boolean" || e.TBoolean(a) ? t.True : t.False;
       }
-      function C(a, n) {
+      function E(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TBoolean(n) ? t.True : t.False;
       }
       function N(a, n) {
@@ -376,82 +376,82 @@ function it() {
       function I(a, n) {
         return n.allOf.every((_) => W(a, _) === t.True) ? t.True : t.False;
       }
-      function K(a, n) {
+      function q(a, n) {
         return a.allOf.some((_) => W(_, n) === t.True) ? t.True : t.False;
       }
       function J(a) {
         return typeof a.const == "string";
       }
-      function q(a) {
+      function K(a) {
         return typeof a.const == "number";
       }
       function M(a) {
         return typeof a.const == "boolean";
       }
       function G(a, n) {
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TString(n) ? be(a) : e.TNumber(n) ? fe(a) : e.TInteger(n) ? R(a) : e.TBoolean(n) ? w(a) : e.TLiteral(n) && n.const === a.const ? t.True : t.False;
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TString(n) ? he(a) : e.TNumber(n) ? de(a) : e.TInteger(n) ? R(a) : e.TBoolean(n) ? w(a) : e.TLiteral(n) && n.const === a.const ? t.True : t.False;
       }
       function Y(a, n) {
         return t.False;
       }
-      function Te(a, n) {
+      function be(a, n) {
         return t.True;
       }
-      function we(a, n) {
+      function Te(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TNull(n) ? t.True : t.False;
       }
-      function fe(a, n) {
-        return e.TLiteral(a) && q(a) || e.TNumber(a) || e.TInteger(a) ? t.True : t.False;
+      function de(a, n) {
+        return e.TLiteral(a) && K(a) || e.TNumber(a) || e.TInteger(a) ? t.True : t.False;
       }
-      function ge(a, n) {
+      function we(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TInteger(n) || e.TNumber(n) ? t.True : t.False;
       }
       function O(a, n) {
         return globalThis.Object.keys(a.properties).length === n;
       }
-      function le(a) {
+      function ce(a) {
         return ae(a);
       }
-      function ye(a) {
+      function fe(a) {
         return O(a, 0) || O(a, 1) && "description" in a.properties && e.TUnion(a.properties.description) && a.properties.description.anyOf.length === 2 && (e.TString(a.properties.description.anyOf[0]) && e.TUndefined(a.properties.description.anyOf[1]) || e.TString(a.properties.description.anyOf[1]) && e.TUndefined(a.properties.description.anyOf[0]));
       }
-      function de(a) {
+      function le(a) {
         return O(a, 0);
       }
-      function pe(a) {
+      function ye(a) {
+        return O(a, 0);
+      }
+      function ge(a) {
         return O(a, 0);
       }
       function Se(a) {
         return O(a, 0);
       }
       function Pe(a) {
-        return O(a, 0);
-      }
-      function Be(a) {
         return ae(a);
       }
-      function ve(a) {
+      function Be(a) {
         const n = o.Type.Number();
         return O(a, 0) || O(a, 1) && "length" in a.properties && c(W(a.properties.length, n)) === t.True;
       }
-      function Ee(a) {
+      function ve(a) {
         return O(a, 0);
       }
       function ae(a) {
         const n = o.Type.Number();
         return O(a, 0) || O(a, 1) && "length" in a.properties && c(W(a.properties.length, n)) === t.True;
       }
-      function Ce(a) {
+      function Ee(a) {
         const n = o.Type.Function([o.Type.Any()], o.Type.Any());
         return O(a, 0) || O(a, 1) && "then" in a.properties && c(W(a.properties.then, n)) === t.True;
       }
-      function me(a, n) {
+      function pe(a, n) {
         return W(a, n) === t.False || e.TOptional(a) && !e.TOptional(n) ? t.False : t.True;
       }
       function V(a, n) {
-        return e.TUnknown(a) ? t.False : e.TAny(a) ? t.Union : e.TNever(a) || e.TLiteral(a) && J(a) && le(n) || e.TLiteral(a) && q(a) && de(n) || e.TLiteral(a) && M(a) && pe(n) || e.TSymbol(a) && ye(n) || e.TBigInt(a) && Se(n) || e.TString(a) && le(n) || e.TSymbol(a) && ye(n) || e.TNumber(a) && de(n) || e.TInteger(a) && de(n) || e.TBoolean(a) && pe(n) || e.TUint8Array(a) && Be(n) || e.TDate(a) && Pe(n) || e.TConstructor(a) && Ee(n) || e.TFunction(a) && ve(n) ? t.True : e.TRecord(a) && e.TString(ue(a)) ? n[o.Hint] === "Record" ? t.True : t.False : e.TRecord(a) && e.TNumber(ue(a)) && O(n, 0) ? t.True : t.False;
+        return e.TUnknown(a) ? t.False : e.TAny(a) ? t.Union : e.TNever(a) || e.TLiteral(a) && J(a) && ce(n) || e.TLiteral(a) && K(a) && le(n) || e.TLiteral(a) && M(a) && ye(n) || e.TSymbol(a) && fe(n) || e.TBigInt(a) && ge(n) || e.TString(a) && ce(n) || e.TSymbol(a) && fe(n) || e.TNumber(a) && le(n) || e.TInteger(a) && le(n) || e.TBoolean(a) && ye(n) || e.TUint8Array(a) && Pe(n) || e.TDate(a) && Se(n) || e.TConstructor(a) && ve(n) || e.TFunction(a) && Be(n) ? t.True : e.TRecord(a) && e.TString(ue(a)) ? n[o.Hint] === "Record" ? t.True : t.False : e.TRecord(a) && e.TNumber(ue(a)) && O(n, 0) ? t.True : t.False;
       }
-      function Ie(a, n) {
+      function Ce(a, n) {
         if (e.TIntersect(n))
           return I(a, n);
         if (e.TUnion(n))
@@ -465,12 +465,12 @@ function it() {
         if (!e.TObject(n))
           return t.False;
         for (const _ of globalThis.Object.keys(n.properties))
-          if (!(_ in a.properties) || me(a.properties[_], n.properties[_]) === t.False)
+          if (!(_ in a.properties) || pe(a.properties[_], n.properties[_]) === t.False)
             return t.False;
         return t.True;
       }
-      function Ue(a, n) {
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) && Ce(n) ? t.True : e.TPromise(n) ? c(W(a.item, n.item)) : t.False;
+      function Ie(a, n) {
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) && Ee(n) ? t.True : e.TPromise(n) ? c(W(a.item, n.item)) : t.False;
       }
       function ue(a) {
         if (o.PatternNumberExact in a.patternProperties)
@@ -479,7 +479,7 @@ function it() {
           return o.Type.String();
         throw Error("TypeExtends: Cannot get record key");
       }
-      function he(a) {
+      function me(a) {
         if (o.PatternNumberExact in a.patternProperties)
           return a.patternProperties[o.PatternNumberExact];
         if (o.PatternStringExact in a.patternProperties)
@@ -487,63 +487,63 @@ function it() {
         throw Error("TypeExtends: Cannot get record value");
       }
       function re(a, n) {
-        const _ = ue(n), ie = he(n);
+        const _ = ue(n), ie = me(n);
         if (e.TLiteral(a) && J(a) && e.TNumber(_) && c(W(a, ie)) === t.True)
           return t.True;
         if (e.TUint8Array(a) && e.TNumber(_) || e.TString(a) && e.TNumber(_) || e.TArray(a) && e.TNumber(_))
           return W(a, ie);
         if (e.TObject(a)) {
-          for (const Qe of globalThis.Object.keys(a.properties))
-            if (me(ie, a.properties[Qe]) === t.False)
+          for (const Ve of globalThis.Object.keys(a.properties))
+            if (pe(ie, a.properties[Ve]) === t.False)
               return t.False;
           return t.True;
         }
         return t.False;
       }
-      function Oe(a, n) {
-        const _ = he(a);
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? W(_, he(n)) : t.False;
+      function Ue(a, n) {
+        const _ = me(a);
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? W(_, me(n)) : t.False;
       }
-      function be(a, n) {
+      function he(a, n) {
         return e.TLiteral(a) && typeof a.const == "string" || e.TString(a) ? t.True : t.False;
       }
-      function ke(a, n) {
+      function Oe(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TString(n) ? t.True : t.False;
       }
-      function $e(a, n) {
+      function Le(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TSymbol(n) ? t.True : t.False;
       }
-      function Ae(a, n) {
+      function Ne(a, n) {
         return e.TUnknown(a) ? t.False : e.TAny(a) ? t.Union : e.TNever(a) ? t.True : t.False;
       }
-      function Re(a, n) {
+      function $e(a, n) {
         return e.TArray(n) && a.items !== void 0 && a.items.every((_) => W(_, n.items) === t.True);
       }
       function ee(a, n) {
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) && ae(n) || e.TArray(n) && Re(a, n) ? t.True : !e.TTuple(n) || a.items === void 0 && n.items !== void 0 || a.items !== void 0 && n.items === void 0 ? t.False : a.items === void 0 && n.items === void 0 || a.items.every((_, ie) => W(_, n.items[ie]) === t.True) ? t.True : t.False;
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) && ae(n) || e.TArray(n) && $e(a, n) ? t.True : !e.TTuple(n) || a.items === void 0 && n.items !== void 0 || a.items !== void 0 && n.items === void 0 ? t.False : a.items === void 0 && n.items === void 0 || a.items.every((_, ie) => W(_, n.items[ie]) === t.True) ? t.True : t.False;
       }
       function s(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TUint8Array(n) ? t.True : t.False;
       }
       function X(a, n) {
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TVoid(n) ? Ge(a) : e.TUndefined(n) ? t.True : t.False;
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TNever(n) ? Y() : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TRecord(n) ? re(a, n) : e.TVoid(n) ? Ye(a) : e.TUndefined(n) ? t.True : t.False;
       }
       function z(a, n) {
         return n.anyOf.some((_) => W(a, _) === t.True) ? t.True : t.False;
       }
-      function Ze(a, n) {
+      function We(a, n) {
         return a.anyOf.every((_) => W(_, n) === t.True) ? t.True : t.False;
       }
       function Q(a, n) {
         return t.True;
       }
-      function Ye(a, n) {
-        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TAny(n) ? f() : e.TString(n) ? be(a) : e.TNumber(n) ? fe(a) : e.TInteger(n) ? R(a) : e.TBoolean(n) ? w(a) : e.TArray(n) ? p(a) : e.TTuple(n) ? Ae(a) : e.TObject(n) ? V(a, n) : e.TUnknown(n) ? t.True : t.False;
+      function Ze(a, n) {
+        return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TAny(n) ? f() : e.TString(n) ? he(a) : e.TNumber(n) ? de(a) : e.TInteger(n) ? R(a) : e.TBoolean(n) ? w(a) : e.TArray(n) ? p(a) : e.TTuple(n) ? Ne(a) : e.TObject(n) ? V(a, n) : e.TUnknown(n) ? t.True : t.False;
       }
-      function Ge(a, n) {
+      function Ye(a, n) {
         return e.TUndefined(a) || e.TUndefined(a) ? t.True : t.False;
       }
-      function Je(a, n) {
+      function Ge(a, n) {
         return e.TIntersect(n) ? I(a, n) : e.TUnion(n) ? z(a, n) : e.TUnknown(n) ? Q() : e.TAny(n) ? f() : e.TObject(n) ? V(a, n) : e.TVoid(n) ? t.True : t.False;
       }
       function W(a, n) {
@@ -558,7 +558,7 @@ function it() {
         if (e.TBigInt(a))
           return T(a, n);
         if (e.TBoolean(a))
-          return C(a, n);
+          return E(a, n);
         if (e.TConstructor(a))
           return N(a, n);
         if (e.TDate(a))
@@ -568,43 +568,43 @@ function it() {
         if (e.TInteger(a))
           return P(a, n);
         if (e.TIntersect(a))
-          return K(a, n);
+          return q(a, n);
         if (e.TLiteral(a))
           return G(a, n);
         if (e.TNever(a))
-          return Te();
+          return be();
         if (e.TNull(a))
-          return we(a, n);
+          return Te(a, n);
         if (e.TNumber(a))
-          return ge(a, n);
+          return we(a, n);
         if (e.TObject(a))
-          return Ie(a, n);
+          return Ce(a, n);
         if (e.TRecord(a))
-          return Oe(a, n);
+          return Ue(a, n);
         if (e.TString(a))
-          return ke(a, n);
+          return Oe(a, n);
         if (e.TSymbol(a))
-          return $e(a, n);
+          return Le(a, n);
         if (e.TTuple(a))
           return ee(a, n);
         if (e.TPromise(a))
-          return Ue(a, n);
+          return Ie(a, n);
         if (e.TUint8Array(a))
           return s(a, n);
         if (e.TUndefined(a))
           return X(a, n);
         if (e.TUnion(a))
-          return Ze(a, n);
+          return We(a, n);
         if (e.TUnknown(a))
-          return Ye(a, n);
+          return Ze(a, n);
         if (e.TVoid(a))
-          return Je(a, n);
+          return Ge(a, n);
         throw Error(`TypeExtends: Unknown left type operand '${a[o.Kind]}'`);
       }
-      function Ve(a, n) {
+      function Je(a, n) {
         return W(a, n);
       }
-      h.Extends = Ve;
+      h.Extends = Je;
     })(i = o.TypeExtends || (o.TypeExtends = {}));
     var u;
     (function(h) {
@@ -615,27 +615,27 @@ function it() {
         return globalThis.Array.isArray(w);
       }
       function b(w) {
-        return w.map((C) => y(C));
+        return w.map((E) => y(E));
       }
       function p(w) {
-        const C = globalThis.Object.getOwnPropertyNames(w).reduce(($, j) => ({ ...$, [j]: y(w[j]) }), {}), N = globalThis.Object.getOwnPropertySymbols(w).reduce(($, j) => ({ ...$, [j]: y(w[j]) }), {});
-        return { ...C, ...N };
+        const E = globalThis.Object.getOwnPropertyNames(w).reduce(($, j) => ({ ...$, [j]: y(w[j]) }), {}), N = globalThis.Object.getOwnPropertySymbols(w).reduce(($, j) => ({ ...$, [j]: y(w[j]) }), {});
+        return { ...E, ...N };
       }
       function y(w) {
         return f(w) ? b(w) : c(w) ? p(w) : w;
       }
-      function T(w, C) {
-        return { ...y(w), ...C };
+      function T(w, E) {
+        return { ...y(w), ...E };
       }
       h.Clone = T;
     })(u = o.TypeClone || (o.TypeClone = {}));
     var l;
     (function(h) {
       function c(T, w) {
-        return o.Type.Intersect(T.allOf.map((C) => p(C, w)), { ...T });
+        return o.Type.Intersect(T.allOf.map((E) => p(E, w)), { ...T });
       }
       function f(T, w) {
-        return o.Type.Union(T.anyOf.map((C) => p(C, w)), { ...T });
+        return o.Type.Union(T.anyOf.map((E) => p(E, w)), { ...T });
       }
       function b(T, w) {
         return w(T);
@@ -643,8 +643,8 @@ function it() {
       function p(T, w) {
         return T[o.Kind] === "Intersect" ? c(T, w) : T[o.Kind] === "Union" ? f(T, w) : T[o.Kind] === "Object" ? b(T, w) : T;
       }
-      function y(T, w, C) {
-        return { ...p(u.Clone(T, {}), w), ...C };
+      function y(T, w, E) {
+        return { ...p(u.Clone(T, {}), w), ...E };
       }
       h.Map = y;
     })(l = o.ObjectMap || (o.ObjectMap = {}));
@@ -654,11 +654,11 @@ function it() {
         return e.TIntersect(w) || e.TUnion(w) || e.TObject(w) && globalThis.Object.getOwnPropertyNames(w.properties).length > 0;
       }
       function f(w) {
-        return [...w.allOf.filter((C) => c(C)).reduce((C, N) => y(N).map(($) => C.add($))[0], /* @__PURE__ */ new Set())];
+        return [...w.allOf.filter((E) => c(E)).reduce((E, N) => y(N).map(($) => E.add($))[0], /* @__PURE__ */ new Set())];
       }
       function b(w) {
-        const C = w.anyOf.filter((N) => c(N)).map((N) => y(N));
-        return [...C.reduce((N, $) => $.map((j) => C.every((R) => R.includes(j)) ? N.add(j) : N)[0], /* @__PURE__ */ new Set())];
+        const E = w.anyOf.filter((N) => c(N)).map((N) => y(N));
+        return [...E.reduce((N, $) => $.map((j) => E.every((R) => R.includes(j)) ? N.add(j) : N)[0], /* @__PURE__ */ new Set())];
       }
       function p(w) {
         return globalThis.Object.keys(w.properties);
@@ -711,16 +711,16 @@ function it() {
       }
       h.Resolve = c;
     })(A = o.TemplateLiteralResolver || (o.TemplateLiteralResolver = {}));
-    class E extends Error {
+    class C extends Error {
       constructor(c) {
         super(c);
       }
     }
-    o.TemplateLiteralParserError = E;
+    o.TemplateLiteralParserError = C;
     var Z;
     (function(h) {
-      function c(P, I, K) {
-        return P[I] === K && P.charCodeAt(I - 1) !== 92;
+      function c(P, I, q) {
+        return P[I] === q && P.charCodeAt(I - 1) !== 92;
       }
       function f(P, I) {
         return c(P, I, "(");
@@ -735,8 +735,8 @@ function it() {
         if (!(f(P, 0) && b(P, P.length - 1)))
           return !1;
         let I = 0;
-        for (let K = 0; K < P.length; K++)
-          if (f(P, K) && (I += 1), b(P, K) && (I -= 1), I === 0 && K !== P.length - 1)
+        for (let q = 0; q < P.length; q++)
+          if (f(P, q) && (I += 1), b(P, q) && (I -= 1), I === 0 && q !== P.length - 1)
             return !1;
         return !0;
       }
@@ -745,57 +745,57 @@ function it() {
       }
       function w(P) {
         let I = 0;
-        for (let K = 0; K < P.length; K++)
-          if (f(P, K) && (I += 1), b(P, K) && (I -= 1), p(P, K) && I === 0)
+        for (let q = 0; q < P.length; q++)
+          if (f(P, q) && (I += 1), b(P, q) && (I -= 1), p(P, q) && I === 0)
             return !0;
         return !1;
       }
-      function C(P) {
+      function E(P) {
         for (let I = 0; I < P.length; I++)
           if (f(P, I))
             return !0;
         return !1;
       }
       function N(P) {
-        let [I, K] = [0, 0];
+        let [I, q] = [0, 0];
         const J = [];
         for (let M = 0; M < P.length; M++)
           if (f(P, M) && (I += 1), b(P, M) && (I -= 1), p(P, M) && I === 0) {
-            const G = P.slice(K, M);
-            G.length > 0 && J.push(j(G)), K = M + 1;
+            const G = P.slice(q, M);
+            G.length > 0 && J.push(j(G)), q = M + 1;
           }
-        const q = P.slice(K);
-        return q.length > 0 && J.push(j(q)), J.length === 0 ? { type: "const", const: "" } : J.length === 1 ? J[0] : { type: "or", expr: J };
+        const K = P.slice(q);
+        return K.length > 0 && J.push(j(K)), J.length === 0 ? { type: "const", const: "" } : J.length === 1 ? J[0] : { type: "or", expr: J };
       }
       function $(P) {
-        function I(q, M) {
-          if (!f(q, M))
-            throw new E("TemplateLiteralParser: Index must point to open parens");
+        function I(K, M) {
+          if (!f(K, M))
+            throw new C("TemplateLiteralParser: Index must point to open parens");
           let G = 0;
-          for (let Y = M; Y < q.length; Y++)
-            if (f(q, Y) && (G += 1), b(q, Y) && (G -= 1), G === 0)
+          for (let Y = M; Y < K.length; Y++)
+            if (f(K, Y) && (G += 1), b(K, Y) && (G -= 1), G === 0)
               return [M, Y];
-          throw new E("TemplateLiteralParser: Unclosed group parens in expression");
+          throw new C("TemplateLiteralParser: Unclosed group parens in expression");
         }
-        function K(q, M) {
-          for (let G = M; G < q.length; G++)
-            if (f(q, G))
+        function q(K, M) {
+          for (let G = M; G < K.length; G++)
+            if (f(K, G))
               return [M, G];
-          return [M, q.length];
+          return [M, K.length];
         }
         const J = [];
-        for (let q = 0; q < P.length; q++)
-          if (f(P, q)) {
-            const [M, G] = I(P, q), Y = P.slice(M, G + 1);
-            J.push(j(Y)), q = G;
+        for (let K = 0; K < P.length; K++)
+          if (f(P, K)) {
+            const [M, G] = I(P, K), Y = P.slice(M, G + 1);
+            J.push(j(Y)), K = G;
           } else {
-            const [M, G] = K(P, q), Y = P.slice(M, G);
-            Y.length > 0 && J.push(j(Y)), q = G - 1;
+            const [M, G] = q(P, K), Y = P.slice(M, G);
+            Y.length > 0 && J.push(j(Y)), K = G - 1;
           }
         return J.length === 0 ? { type: "const", const: "" } : J.length === 1 ? J[0] : { type: "and", expr: J };
       }
       function j(P) {
-        return y(P) ? j(T(P)) : w(P) ? N(P) : C(P) ? $(P) : { type: "const", const: P };
+        return y(P) ? j(T(P)) : w(P) ? N(P) : E(P) ? $(P) : { type: "const", const: P };
       }
       h.Parse = j;
       function R(P) {
@@ -835,8 +835,8 @@ function it() {
         if (T.length === 1)
           return yield* T[0];
         for (const w of T[0])
-          for (const C of c(T.slice(1)))
-            yield `${w}${C}`;
+          for (const E of c(T.slice(1)))
+            yield `${w}${E}`;
       }
       function* f(T) {
         return yield* c(T.expr.map((w) => [...y(w)]));
@@ -904,16 +904,16 @@ function it() {
       }
       /** `[Standard]` Creates a Composite object type. */
       Composite(c, f) {
-        const b = (C, N) => C.every(($) => !(N in $.properties) || p($.properties[N])), p = (C) => e.TOptional(C) || e.TReadonlyOptional(C), [y, T] = [/* @__PURE__ */ new Set(), /* @__PURE__ */ new Set()];
-        for (const C of c)
-          for (const N of globalThis.Object.getOwnPropertyNames(C.properties))
+        const b = (E, N) => E.every(($) => !(N in $.properties) || p($.properties[N])), p = (E) => e.TOptional(E) || e.TReadonlyOptional(E), [y, T] = [/* @__PURE__ */ new Set(), /* @__PURE__ */ new Set()];
+        for (const E of c)
+          for (const N of globalThis.Object.getOwnPropertyNames(E.properties))
             b(c, N) && T.add(N);
-        for (const C of c)
-          for (const N of globalThis.Object.getOwnPropertyNames(C.properties))
+        for (const E of c)
+          for (const N of globalThis.Object.getOwnPropertyNames(E.properties))
             T.has(N) || y.add(N);
         const w = {};
-        for (const C of c)
-          for (const [N, $] of Object.entries(C.properties)) {
+        for (const E of c)
+          for (const [N, $] of Object.entries(E.properties)) {
             const j = u.Clone($, {});
             if (T.has(N) || delete j[o.Modifier], N in w) {
               const R = i.Extends(w[N], j) !== t.False, P = i.Extends(j, w[N]) !== t.False;
@@ -1014,7 +1014,7 @@ function it() {
       }
       /** `[Standard]` Creates an Object type */
       Object(c, f = {}) {
-        const b = globalThis.Object.getOwnPropertyNames(c), p = b.filter((C) => e.TOptional(c[C]) || e.TReadonlyOptional(c[C])), y = b.filter((C) => !p.includes(C)), T = e.TSchema(f.additionalProperties) ? { additionalProperties: u.Clone(f.additionalProperties, {}) } : {}, w = b.reduce((C, N) => ({ ...C, [N]: u.Clone(c[N], {}) }), {});
+        const b = globalThis.Object.getOwnPropertyNames(c), p = b.filter((E) => e.TOptional(c[E]) || e.TReadonlyOptional(c[E])), y = b.filter((E) => !p.includes(E)), T = e.TSchema(f.additionalProperties) ? { additionalProperties: u.Clone(f.additionalProperties, {}) } : {}, w = b.reduce((E, N) => ({ ...E, [N]: u.Clone(c[N], {}) }), {});
         return y.length > 0 ? this.Create({ ...f, ...T, [o.Kind]: "Object", type: "object", properties: w, required: y }) : this.Create({ ...f, ...T, [o.Kind]: "Object", type: "object", properties: w });
       }
       Omit(c, f, b = {}) {
@@ -1122,7 +1122,7 @@ function it() {
       }
       /** `[Standard]` Creates a Tuple type */
       Tuple(c, f = {}) {
-        const [b, p, y] = [!1, c.length, c.length], T = c.map((C) => u.Clone(C, {})), w = c.length > 0 ? { ...f, [o.Kind]: "Tuple", type: "array", items: T, additionalItems: b, minItems: p, maxItems: y } : { ...f, [o.Kind]: "Tuple", type: "array", minItems: p, maxItems: y };
+        const [b, p, y] = [!1, c.length, c.length], T = c.map((E) => u.Clone(E, {})), w = c.length > 0 ? { ...f, [o.Kind]: "Tuple", type: "array", items: T, additionalItems: b, minItems: p, maxItems: y } : { ...f, [o.Kind]: "Tuple", type: "array", minItems: p, maxItems: y };
         return this.Create(w);
       }
       Union(c, f = {}) {
@@ -1221,10 +1221,10 @@ function it() {
       }
     }
     o.ExtendedTypeBuilder = U, o.StandardType = new k(), o.Type = new U();
-  }(xe)), xe;
+  }(Ae)), Ae;
 }
-var F = it(), x = /* @__PURE__ */ ((o) => (o.AUTHORIZED = "Authorized", o.REJECTED = "Rejected", o))(x || {});
-const st = F.Type.Enum(x);
+var F = ot(), x = /* @__PURE__ */ ((o) => (o.AUTHORIZED = "Authorized", o.REJECTED = "Rejected", o))(x || {});
+const it = F.Type.Enum(x);
 F.Type.Object({
   paymentMethod: F.Type.Object({
     type: F.Type.String(),
@@ -1239,20 +1239,20 @@ F.Type.Object({
     doRedirect: F.Type.Optional(F.Type.String()),
     returnUrl: F.Type.Optional(F.Type.String())
   }),
-  paymentOutcome: st,
+  paymentOutcome: it,
   lang: F.Type.Optional(F.Type.String()),
   path: F.Type.Optional(F.Type.String())
 });
-class at {
+class st {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new ut(this.baseOptions, d);
+    return new at(this.baseOptions, d);
   }
 }
-class ut extends D {
+class at extends D {
   constructor(r, e) {
     super(
       H.invoice,
@@ -1354,16 +1354,16 @@ class ut extends D {
       ` : "";
   }
 }
-class ct {
+class ut {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new lt(this.baseOptions, d);
+    return new ct(this.baseOptions, d);
   }
 }
-class lt extends D {
+class ct extends D {
   constructor(r, e) {
     super(
       H.prepayment,
@@ -1465,19 +1465,19 @@ class lt extends D {
       ` : "";
   }
 }
-class dt {
+class lt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new ft(
+    return new dt(
       this.baseOptions,
       d
     );
   }
 }
-class ft extends D {
+class dt extends D {
   constructor(r, e) {
     super(
       H.GuaranteedInvoice,
@@ -1613,24 +1613,24 @@ class ft extends D {
           `HTTP ${A.status}`
         );
       }
-      const E = await A.json();
-      if (String((E == null ? void 0 : E.transactionStatus) ?? "").toUpperCase() === "FAILURE") {
+      const C = await A.json();
+      if (String((C == null ? void 0 : C.transactionStatus) ?? "").toUpperCase() === "FAILURE") {
         (i = this.onError) == null || i.call(
           this,
-          (E == null ? void 0 : E.transactionStatusText) || "Payment failed. Please try again.",
-          { paymentReference: E == null ? void 0 : E.paymentReference }
+          (C == null ? void 0 : C.transactionStatusText) || "Payment failed. Please try again.",
+          { paymentReference: C == null ? void 0 : C.paymentReference }
         );
         return;
       }
-      if (E != null && E.paymentReference) {
+      if (C != null && C.paymentReference) {
         (u = this.onComplete) == null || u.call(this, {
           isSuccess: !0,
-          paymentReference: E.paymentReference
+          paymentReference: C.paymentReference
         });
         return;
       }
       this.onError(
-        (E == null ? void 0 : E.transactionStatusText) || "Some error occurred. Please try again."
+        (C == null ? void 0 : C.transactionStatusText) || "Some error occurred. Please try again."
       );
     } catch (l) {
       console.error(
@@ -1696,7 +1696,7 @@ class ft extends D {
     `;
   }
 }
-function Xe(o) {
+function Me(o) {
   const r = o.toLowerCase().startsWith("de") ? {
     grant: "Hiermit erteile ich das SEPA-Lastschriftmandat (elektronische Übermittlung) und bestätige, dass die angegebenen Bankdaten korrekt sind!",
     authorization: "Ich ermächtige (A) die Novalnet AG, meinem Kreditinstitut Anweisungen zur Belastung meines Kontos zu erteilen, und (B) mein Kreditinstitut, mein Konto entsprechend den Anweisungen der Novalnet AG zu belasten.",
@@ -1723,19 +1723,19 @@ function Xe(o) {
     </details>
   `;
 }
-class yt {
+class ft {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new pt(
+    return new yt(
       this.baseOptions,
       d
     );
   }
 }
-class pt extends D {
+class yt extends D {
   constructor(r, e) {
     super(
       H.GuaranteedSepa,
@@ -1864,7 +1864,7 @@ class pt extends D {
     });
     const r = this.getLanguage(), e = window.location.origin;
     try {
-      const E = (t = document.getElementById(
+      const C = (t = document.getElementById(
         "nn_guaranteesepa_account_holder"
       )) == null ? void 0 : t.value.trim(), Z = (i = document.getElementById(
         "nn_guaranteesepa_account_no"
@@ -1873,7 +1873,7 @@ class pt extends D {
       )) == null ? void 0 : u.value.trim(), ne = (l = document.getElementById(
         "nn_guaranteesepa_dob"
       )) == null ? void 0 : l.value.trim();
-      if (!E) {
+      if (!C) {
         this.onError(
           this.getLanguage() === "de" ? "Bitte geben Sie den Kontoinhaber ein." : "Please enter account holder name."
         );
@@ -1902,7 +1902,7 @@ class pt extends D {
       const L = {
         paymentMethod: {
           type: "GUARANTEED_DIRECT_DEBIT_SEPA",
-          accHolder: E,
+          accHolder: C,
           iban: Z,
           bic: te,
           birthdate: ne
@@ -1951,10 +1951,10 @@ class pt extends D {
       this.onError(
         (U == null ? void 0 : U.transactionStatusText) || "Payment failed. Please try again."
       );
-    } catch (E) {
+    } catch (C) {
       console.error(
         "[Guaranteed SEPA] Submit error",
-        E
+        C
       ), this.onError(
         "Some error occurred. Please try again."
       );
@@ -2061,7 +2061,7 @@ class pt extends D {
             />
           </div>
 
-          ${Xe(r)}
+          ${Me(r)}
 
           ${i}
 
@@ -2070,16 +2070,16 @@ class pt extends D {
     `;
   }
 }
-class mt {
+class pt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new ht(this.baseOptions, d);
+    return new mt(this.baseOptions, d);
   }
 }
-class ht extends D {
+class mt extends D {
   constructor(r, e) {
     super(H.ideal, r, e);
     g(this, "showPayButton");
@@ -2169,16 +2169,16 @@ class ht extends D {
       ` : "";
   }
 }
-class bt {
+class ht {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Tt(this.baseOptions, d);
+    return new bt(this.baseOptions, d);
   }
 }
-class Tt extends D {
+class bt extends D {
   constructor(r, e) {
     super(
       H.paypal,
@@ -2266,19 +2266,19 @@ class Tt extends D {
       ` : "";
   }
 }
-class wt {
+class Tt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new gt(
+    return new wt(
       this.baseOptions,
       d
     );
   }
 }
-class gt extends D {
+class wt extends D {
   constructor(r, e) {
     super(
       H.onlinebanktransfer,
@@ -2404,16 +2404,16 @@ class gt extends D {
     `;
   }
 }
-class St {
+class gt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Pt(this.baseOptions, d);
+    return new St(this.baseOptions, d);
   }
 }
-class Pt extends D {
+class St extends D {
   constructor(r, e) {
     super(
       H.alipay,
@@ -2501,16 +2501,16 @@ class Pt extends D {
       ` : "";
   }
 }
-class Bt {
+class Pt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new vt(this.baseOptions, d);
+    return new Bt(this.baseOptions, d);
   }
 }
-class vt extends D {
+class Bt extends D {
   constructor(r, e) {
     super(
       H.bancontact,
@@ -2598,16 +2598,16 @@ class vt extends D {
       ` : "";
   }
 }
-class Et {
+class vt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Ct(this.baseOptions, d);
+    return new Et(this.baseOptions, d);
   }
 }
-class Ct extends D {
+class Et extends D {
   constructor(r, e) {
     super(
       H.blik,
@@ -2695,16 +2695,16 @@ class Ct extends D {
       ` : "";
   }
 }
-class It {
+class Ct {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Ut(this.baseOptions, d);
+    return new It(this.baseOptions, d);
   }
 }
-class Ut extends D {
+class It extends D {
   constructor(r, e) {
     super(
       H.eps,
@@ -2792,16 +2792,16 @@ class Ut extends D {
       ` : "";
   }
 }
-class Ot {
+class Ut {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new kt(this.baseOptions, d);
+    return new Ot(this.baseOptions, d);
   }
 }
-class kt extends D {
+class Ot extends D {
   constructor(r, e) {
     super(
       H.mbway,
@@ -2898,16 +2898,16 @@ class kt extends D {
     `;
   }
 }
-class Lt {
+class kt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Nt(this.baseOptions, d);
+    return new Lt(this.baseOptions, d);
   }
 }
-class Nt extends D {
+class Lt extends D {
   constructor(r, e) {
     super(
       H.multibanco,
@@ -2999,19 +2999,19 @@ class Nt extends D {
       ` : "";
   }
 }
-class $t {
+class Nt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new At(
+    return new $t(
       this.baseOptions,
       d
     );
   }
 }
-class At extends D {
+class $t extends D {
   constructor(r, e) {
     super(
       H.postfinance,
@@ -3122,19 +3122,19 @@ class At extends D {
       ` : "";
   }
 }
-class Rt {
+class At {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new xt(
+    return new Rt(
       this.baseOptions,
       d
     );
   }
 }
-class xt extends D {
+class Rt extends D {
   constructor(r, e) {
     super(
       H.postfinancecard,
@@ -3259,16 +3259,16 @@ class xt extends D {
     `;
   }
 }
-class _t {
+class xt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Ht(this.baseOptions, d);
+    return new _t(this.baseOptions, d);
   }
 }
-class Ht extends D {
+class _t extends D {
   constructor(r, e) {
     super(
       H.przelewy24,
@@ -3356,16 +3356,16 @@ class Ht extends D {
       ` : "";
   }
 }
-class jt {
+class Ht {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Ft(this.baseOptions, d);
+    return new jt(this.baseOptions, d);
   }
 }
-class Ft extends D {
+class jt extends D {
   constructor(r, e) {
     super(
       H.trustly,
@@ -3453,16 +3453,16 @@ class Ft extends D {
       ` : "";
   }
 }
-class Dt {
+class Ft {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new zt(this.baseOptions, d);
+    return new Dt(this.baseOptions, d);
   }
 }
-class zt extends D {
+class Dt extends D {
   constructor(r, e) {
     super(
       H.twint,
@@ -3550,7 +3550,7 @@ class zt extends D {
       ` : "";
   }
 }
-class qt {
+class zt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
@@ -3647,16 +3647,16 @@ class Kt extends D {
       ` : "";
   }
 }
-class Mt {
+class qt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Xt(this.baseOptions, d);
+    return new Mt(this.baseOptions, d);
   }
 }
-class Xt extends D {
+class Mt extends D {
   constructor(r, e) {
     super(
       H.pix,
@@ -3744,16 +3744,16 @@ class Xt extends D {
       ` : "";
   }
 }
-class Wt {
+class Xt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Zt(this.baseOptions, d);
+    return new Wt(this.baseOptions, d);
   }
 }
-class Zt extends D {
+class Wt extends D {
   constructor(r, e) {
     super(
       H.boleto,
@@ -3841,16 +3841,16 @@ class Zt extends D {
       ` : "";
   }
 }
-class Yt {
+class Zt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Gt(this.baseOptions, d);
+    return new Yt(this.baseOptions, d);
   }
 }
-class Gt extends D {
+class Yt extends D {
   constructor(r, e) {
     super(
       H.bizum,
@@ -3938,16 +3938,16 @@ class Gt extends D {
       ` : "";
   }
 }
-class je {
+class He {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Jt(this.baseOptions, d);
+    return new Gt(this.baseOptions, d);
   }
 }
-class Jt extends D {
+class Gt extends D {
   constructor(r, e) {
     super(
       H.bancomat,
@@ -4035,16 +4035,16 @@ class Jt extends D {
       ` : "";
   }
 }
-class Fe {
+class je {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Vt(this.baseOptions, d);
+    return new Jt(this.baseOptions, d);
   }
 }
-class Vt extends D {
+class Jt extends D {
   constructor(r, e) {
     super(
       H.kakaopay,
@@ -4132,16 +4132,16 @@ class Vt extends D {
       ` : "";
   }
 }
-class De {
+class Fe {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new Qt(this.baseOptions, d);
+    return new Vt(this.baseOptions, d);
   }
 }
-class Qt extends D {
+class Vt extends D {
   constructor(r, e) {
     super(
       H.naverpay,
@@ -4229,14 +4229,14 @@ class Qt extends D {
       ` : "";
   }
 }
-const ze = "https://cdn.novalnet.de/js/v2/NovalnetUtility-1.1.2.js";
-class en {
+const De = "https://cdn.novalnet.de/js/v2/NovalnetUtility-1.1.2.js";
+class Qt {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new _e(
+    return new Re(
       this.baseOptions,
       d
     );
@@ -4256,7 +4256,7 @@ const se = class se extends D {
     return typeof window.NovalnetUtility < "u" ? Promise.resolve() : (se.utilityLoadPromise || (se.utilityLoadPromise = new Promise(
       (r, e) => {
         const t = document.querySelector(
-          `script[src="${ze}"]`
+          `script[src="${De}"]`
         );
         if (t) {
           if (typeof window.NovalnetUtility < "u") {
@@ -4291,7 +4291,7 @@ const se = class se extends D {
         const i = document.createElement(
           "script"
         );
-        i.src = ze, i.async = !0, i.onload = () => {
+        i.src = De, i.async = !0, i.onload = () => {
           if (typeof window.NovalnetUtility > "u") {
             e(
               new Error(
@@ -4453,13 +4453,13 @@ const se = class se extends D {
       window.location.href
     ).origin;
     try {
-      const E = document.getElementById(
+      const C = document.getElementById(
         "nn_account_holder"
       ), Z = document.getElementById(
         "nn_sepa_account_no"
       ), te = document.getElementById(
         "nn_sepa_bic"
-      ), ne = ((t = E == null ? void 0 : E.value) == null ? void 0 : t.trim()) ?? "", oe = ((u = (i = Z == null ? void 0 : Z.value) == null ? void 0 : i.replace(/\s/g, "")) == null ? void 0 : u.trim()) ?? "", L = ((m = (l = te == null ? void 0 : te.value) == null ? void 0 : l.replace(/\s/g, "")) == null ? void 0 : m.trim()) ?? "";
+      ), ne = ((t = C == null ? void 0 : C.value) == null ? void 0 : t.trim()) ?? "", oe = ((u = (i = Z == null ? void 0 : Z.value) == null ? void 0 : i.replace(/\s/g, "")) == null ? void 0 : u.trim()) ?? "", L = ((m = (l = te == null ? void 0 : te.value) == null ? void 0 : l.replace(/\s/g, "")) == null ? void 0 : m.trim()) ?? "";
       if (!ne) {
         console.warn(
           "[SEPA] Account holder validation failed"
@@ -4535,13 +4535,13 @@ const se = class se extends D {
       ), this.onError(
         (h == null ? void 0 : h.transactionStatusText) || "Some error occurred. Please try again."
       );
-    } catch (E) {
+    } catch (C) {
       console.error(
         "[SEPA] Submit error",
         {
-          message: E == null ? void 0 : E.message,
-          stack: E == null ? void 0 : E.stack,
-          error: E
+          message: C == null ? void 0 : C.message,
+          stack: C == null ? void 0 : C.stack,
+          error: C
         }
       ), this.onError(
         "Some error occurred. Please try again."
@@ -4716,7 +4716,7 @@ const se = class se extends D {
 
           </div>
 
-          ${Xe(r)}
+          ${Me(r)}
 
           ${i}
 
@@ -4727,20 +4727,20 @@ const se = class se extends D {
   }
 };
 g(se, "utilityLoadPromise", null);
-let _e = se;
-class tn {
+let Re = se;
+class en {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new nn(
+    return new tn(
       this.baseOptions,
       d
     );
   }
 }
-class nn extends D {
+class tn extends D {
   constructor(r, e) {
     super(
       H.ach,
@@ -4800,9 +4800,9 @@ class nn extends D {
         "achForm-accHolder"
       ), A = document.getElementById(
         "achForm-accountNumber"
-      ), E = document.getElementById(
+      ), C = document.getElementById(
         "achForm-routingNumber"
-      ), Z = ((e = S == null ? void 0 : S.value) == null ? void 0 : e.trim()) ?? "", te = ((t = A == null ? void 0 : A.value) == null ? void 0 : t.trim()) ?? "", ne = ((i = E == null ? void 0 : E.value) == null ? void 0 : i.trim()) ?? "";
+      ), Z = ((e = S == null ? void 0 : S.value) == null ? void 0 : e.trim()) ?? "", te = ((t = A == null ? void 0 : A.value) == null ? void 0 : t.trim()) ?? "", ne = ((i = C == null ? void 0 : C.value) == null ? void 0 : i.trim()) ?? "";
       if (!Z || !te || !ne) {
         console.warn(
           "[ACH] Required field validation failed"
@@ -5075,16 +5075,10 @@ class nn extends D {
     `;
   }
 }
-const qe = "novalnetPaymentError", Le = "novalnet-payment-error";
-let ce = null;
-function rn(o) {
-  ce = document.querySelector(o);
-  const d = document.getElementById(Le);
-  d && ce && ce.prepend(d);
-}
-function on() {
+const ze = "novalnetPaymentError", xe = "novalnet-payment-error";
+function nn() {
   var o;
-  (o = document.getElementById(Le)) == null || o.remove();
+  (o = document.getElementById(xe)) == null || o.remove();
 }
 async function Ke(o, d) {
   try {
@@ -5094,36 +5088,35 @@ async function Ke(o, d) {
     return d;
   }
 }
-function We(o) {
+function Xe(o) {
   const d = o instanceof Error ? o.message : String(o ?? "");
   if (!d.trim()) return;
-  const r = ce != null && ce.isConnected ? ce : document.body;
-  let e = document.getElementById(Le);
-  e || (e = document.createElement("div"), e.id = Le, e.setAttribute("role", "alert"), e.style.cssText = "padding:12px 16px;margin:12px 0;border:1px solid #c62828;border-radius:4px;color:#8e1616;background:#fff4f4;"), r.prepend(e), e.textContent = d.slice(0, 500);
+  let r = document.getElementById(xe);
+  r || (r = document.createElement("div"), r.id = xe, r.setAttribute("role", "alert"), r.style.cssText = "position:fixed;top:16px;right:16px;z-index:2147483647;box-sizing:border-box;width:calc(100% - 32px);max-width:420px;padding:12px 16px;border:1px solid #c62828;border-radius:4px;color:#8e1616;background:#fff4f4;box-shadow:0 3px 12px rgba(0,0,0,.2);"), document.body.append(r), r.textContent = d.slice(0, 500);
 }
-function sn() {
-  const o = new URL(window.location.href), d = o.searchParams.get(qe);
+function rn() {
+  const o = new URL(window.location.href), d = o.searchParams.get(ze);
   if (d) {
-    o.searchParams.delete(qe), We(d);
+    o.searchParams.delete(ze), Xe(d);
     try {
       window.history.replaceState(window.history.state, "", o.toString());
     } catch {
     }
   }
 }
-class an {
+class on {
   constructor(d) {
     g(this, "componentHasSubmit", !0);
     this.baseOptions = d;
   }
   build(d) {
-    return new un(
+    return new sn(
       this.baseOptions,
       d
     );
   }
 }
-class un extends D {
+class sn extends D {
   constructor(r, e) {
     super(
       H.creditcard,
@@ -5245,14 +5238,14 @@ class un extends D {
       ), S = document.getElementById(
         "do_redirect"
       );
-      let A = (l == null ? void 0 : l.value.trim()) ?? "", E = (m == null ? void 0 : m.value.trim()) ?? "", Z = (S == null ? void 0 : S.value.trim()) ?? "";
-      if (!A || !E) {
+      let A = (l == null ? void 0 : l.value.trim()) ?? "", C = (m == null ? void 0 : m.value.trim()) ?? "", Z = (S == null ? void 0 : S.value.trim()) ?? "";
+      if (!A || !C) {
         const k = await this._getPanHash();
-        A = k.hash, E = k.unique_id, Z = String(
+        A = k.hash, C = k.unique_id, Z = String(
           k.do_redirect ?? ""
-        ), l && (l.value = A), m && (m.value = E), S && (S.value = Z);
+        ), l && (l.value = A), m && (m.value = C), S && (S.value = Z);
       }
-      if (!A || !E)
+      if (!A || !C)
         throw new Error(
           "Credit card tokenization failed. pan_hash or unique_id is missing."
         );
@@ -5262,7 +5255,7 @@ class un extends D {
         paymentMethod: {
           type: "CREDITCARD",
           panHash: A,
-          uniqueId: E,
+          uniqueId: C,
           doRedirect: Z
         },
         paymentOutcome: x.AUTHORIZED,
@@ -5519,10 +5512,10 @@ class un extends D {
             "pan_hash"
           ), A = document.getElementById(
             "unique_id"
-          ), E = document.getElementById(
+          ), C = document.getElementById(
             "do_redirect"
           );
-          return S && (S.value = m.hash), A && (A.value = m.unique_id), E && (E.value = String(
+          return S && (S.value = m.hash), A && (A.value = m.unique_id), C && (C.value = String(
             m.do_redirect ?? ""
           )), this.panHashResolve && this.panHashResolve({
             hash: m.hash,
@@ -5577,7 +5570,7 @@ class un extends D {
     );
   }
 }
-class cn {
+class an {
   /**
    * Creates an instance of FakeSdk.
    * @param environment - The environment for the SDK.
@@ -5594,85 +5587,78 @@ class cn {
     console.log("FakeSdk init", d);
   }
 }
-const Ne = class Ne {
+const ke = class ke {
   constructor(d) {
     g(this, "setupData");
-    this.setupData = Ne._Setup(d);
+    this.setupData = ke._Setup(d);
   }
   async createComponentBuilder(d) {
     const { baseOptions: r } = await this.setupData, e = d == null ? void 0 : d.trim().toLowerCase();
     let t = e;
     e.includes("ideal") && (t = "ideal"), (e.includes("direct debit sepa") || e.includes("sepa") || e.includes("Direct Debit SEPA")) && (t = "sepa"), (e.includes("direct debit ach") || e.includes("ach") || e.includes("Direct Debit ACH")) && (t = "ach"), (e.includes("online bank transfer") || e.includes("onlinebanktransfer") || e.includes("Online bank transfer")) && (t = "onlinebanktransfer"), (e.includes("credit/debit cards") || e.includes("creditcard") || e.includes("Credit/Debit Cards")) && (t = "creditcard"), (e.includes("mb way") || e.includes("mbway") || e.includes("MB Way")) && (t = "mbway"), (e.includes("invoice with payment guarantee") || e.includes("guaranteedinvoice") || e.includes("GuaranteedInvoice") || e.includes("Invoice with payment guarantee")) && (t = "guaranteedinvoice"), (e.includes("direct debit sepa with payment guarantee") || e.includes("guaranteedsepa") || e.includes("GuaranteedSepa") || e.includes("Direct Debit SEPA with payment guarantee")) && (t = "guaranteedsepa"), (e.includes("postFinance card") || e.includes("postfinancecard") || e.includes("PostFinance Card")) && (t = "postfinancecard"), (e.includes("postFinance e-finance") || e.includes("postfinance") || e.includes("PostFinance E-Finance")) && (t = "postfinance");
     const u = {
-      invoice: at,
-      prepayment: ct,
-      guaranteedinvoice: dt,
-      guaranteedsepa: yt,
-      ideal: mt,
-      paypal: bt,
-      onlinebanktransfer: wt,
-      alipay: St,
-      bancontact: Bt,
-      blik: Et,
-      eps: It,
-      mbway: Ot,
-      multibanco: Lt,
-      postfinance: $t,
-      postfinancecard: Rt,
-      przelewy24: _t,
-      trustly: jt,
-      twint: Dt,
-      wechatpay: qt,
-      pix: Mt,
-      boleto: Wt,
-      bizum: Yt,
-      "bancomat pay": je,
-      bancomatpay: je,
-      kakaopay: Fe,
-      "kakao pay": Fe,
-      naverpay: De,
-      "naver pay": De,
-      sepa: en,
-      ach: tn,
-      creditcard: an
+      invoice: st,
+      prepayment: ut,
+      guaranteedinvoice: lt,
+      guaranteedsepa: ft,
+      ideal: pt,
+      paypal: ht,
+      onlinebanktransfer: Tt,
+      alipay: gt,
+      bancontact: Pt,
+      blik: vt,
+      eps: Ct,
+      mbway: Ut,
+      multibanco: kt,
+      postfinance: Nt,
+      postfinancecard: At,
+      przelewy24: xt,
+      trustly: Ht,
+      twint: Ft,
+      wechatpay: zt,
+      pix: qt,
+      boleto: Xt,
+      bizum: Zt,
+      "bancomat pay": He,
+      bancomatpay: He,
+      kakaopay: je,
+      "kakao pay": je,
+      naverpay: Fe,
+      "naver pay": Fe,
+      sepa: Qt,
+      ach: en,
+      creditcard: on
     }[t];
     if (!u)
       throw new Error(`Unsupported payment type: ${d}`);
-    const l = new u(r);
-    return {
-      componentHasSubmit: l.componentHasSubmit,
-      build(m) {
-        const S = l.build(m), A = S.mount.bind(S);
-        return S.mount = (E) => (rn(E), A(E)), S;
-      }
-    };
+    return new u(r);
   }
 };
-g(Ne, "_Setup", async (d) => {
-  sn();
+g(ke, "_Setup", async (d) => {
+  rn();
   const r = {
     // environment: configJson.environment,
     environment: "test"
   };
   return Promise.resolve({
     baseOptions: {
-      sdk: new cn(r),
+      sdk: new an(r),
       processorUrl: d.processorUrl,
       sessionId: d.sessionId,
       environment: r.environment,
       locale: d.locale,
       onComplete: (e) => {
         var t;
-        on(), (t = d.onComplete) == null || t.call(d, e);
+        nn(), (t = d.onComplete) == null || t.call(d, e);
       },
       onError: (e, t) => {
         var i;
-        We(e), (i = d.onError) == null || i.call(d, e, t);
+        Xe(e), (i = d.onError) == null || i.call(d, e, t);
       }
     }
   });
 });
-let Me = Ne;
+let qe = ke;
 export {
-  Me as Enabler
+  qe as Enabler
 };
