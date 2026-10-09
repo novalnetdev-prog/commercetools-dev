@@ -59,6 +59,8 @@ type NovalnetConfig = {
   forceNonGuarantee: string;
 };
 
+export class CheckoutPaymentError extends Error {}
+
 type TransactionCommentParams = {
   eventTID?: string | null;
   parentTID?: string | null;
@@ -525,15 +527,6 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         throw err;
       }
 		
-	 // const orderStates = this.mapNovalnetOrderStates({
-	  //  status,
-	  //});
-	
-	  //await this.updateOrderStates({
-	  //  paymentId: parsedData.ctPaymentId,
-	   // ...orderStates,
-	  //});
-		
       log.info("[transactionUpdate] Order payment comments synced", {
         orderId,
         ctPaymentId: parsedData.ctPaymentId,
@@ -640,8 +633,8 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         Number(forceNonGuarantee) !== 0;
 
       if (!guaranteePayment && !isForceNonGuarantee && amountValid) {
-        throw new Error(
-        "Guaranteed payment is not available. Please choose another payment method."
+        throw new CheckoutPaymentError(
+        "Payment conditions were not met. Please choose another payment method."
         );
       }
 		
@@ -3931,8 +3924,8 @@ private buildTransactionComments(
           return t(locale, "callback.amountUpdateComment", {
             eventTID,
             formattedAmount,
-			date,
-	    	time,
+            date,
+	    time,
           });
 
         case "DUE_DATE":
