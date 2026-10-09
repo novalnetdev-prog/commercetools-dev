@@ -36,10 +36,10 @@ deployAs:
           required: true
           default: "https://mc-api.europe-west1.gcp.commercetools.com"
         - key: NOVALNET_PUBLIC_KEY
-          description: Novalnet Public Key
+          description: Your product activation key is a unique token for merchant authentication and payment processing. Get your Product activation key from the Novalnet Admin Portal `:` Projects > Choose your project > API credentials > API Signature 
           required: true
         - key: NOVALNET_TARIFF_KEY
-          description: Novalnet Tariff ID
+          description: Enter a Tariff ID to match the preferred tariff plan you created at the Novalnet Admin Portal for this project.
           required: true
         - key: NOVALNET_CLIENT_KEY
           description: Novalnet client key
@@ -232,7 +232,7 @@ deployAs:
           required: false
       securedConfiguration:
         - key: NOVALNET_PRIVATE_KEY
-          description: Novalnet Access Key for API authentication
+          description: Your secret key used to encrypt the data to avoid user manipulation and fraud. Get your Payment access key from the Novalnet Admin Portal Projects > Choose your project > API credentials > Payment access key
           required: true
         - key: CTP_CLIENT_SECRET
           description: "commercetools client secret"
