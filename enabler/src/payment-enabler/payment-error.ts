@@ -1,7 +1,13 @@
 const QUERY_PARAMETER = 'novalnetPaymentError';
 const ALERT_ID = 'novalnet-payment-error';
+const ERROR_DISPLAY_MS = 12_000;
+let dismissTimer: ReturnType<typeof setTimeout> | undefined;
 
 export function clearPaymentError(): void {
+  if (dismissTimer !== undefined) {
+    clearTimeout(dismissTimer);
+    dismissTimer = undefined;
+  }
   document.getElementById(ALERT_ID)?.remove();
 }
 
@@ -34,6 +40,8 @@ export function showPaymentError(error: unknown): void {
   document.body.append(alert);
 
   alert.textContent = message.slice(0, 500);
+  if (dismissTimer !== undefined) clearTimeout(dismissTimer);
+  dismissTimer = setTimeout(clearPaymentError, ERROR_DISPLAY_MS);
 }
 
 export function showReturnedPaymentError(): void {
