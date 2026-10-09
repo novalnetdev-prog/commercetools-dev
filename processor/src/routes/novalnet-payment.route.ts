@@ -14,7 +14,7 @@ import {
   PaymentResponseSchema,
   PaymentResponseSchemaDTO,
 } from "../dtos/novalnet-payment.dto";
-import { NovalnetPaymentService } from "../services/novalnet-payment.service";
+import { CheckoutPaymentError, NovalnetPaymentService } from "../services/novalnet-payment.service";
 import { log } from "../libs/logger";
 import { getConfig } from "../config/config";
 import { Buffer } from "node:buffer";
@@ -83,10 +83,12 @@ export const paymentRoutes = async (
           stack: error instanceof Error ? error.stack : undefined,
         });
 
-        return reply.code(500).send({
+        return reply.code(error instanceof CheckoutPaymentError ? 200 : 500).send({
           paymentReference: "",
           transactionStatus: "FAILURE",
-          transactionStatusText: "Payment processing failed",
+          transactionStatusText: error instanceof CheckoutPaymentError
+            ? error.message
+            : "Payment processing failed",
         });
       }
     }
@@ -240,6 +242,11 @@ export const paymentRoutes = async (
       redirectUrl.searchParams.set("pspReference", query.pspReference);
     }
 
+    redirectUrl.searchParams.set(
+      "novalnetPaymentError",
+      String(query.status_text || "Payment failed. Please try again.").slice(0, 500),
+    );
+
     try {
       const requestData = {
         paymentReference: query.paymentReference,
@@ -256,15 +263,10 @@ export const paymentRoutes = async (
       await opts.paymentService.failureResponse({
         data: jsonBody, // send JSON string
       });
-      redirectUrl.searchParams.set(
-        "novalnetPaymentError",
-        String(query.status_text || "Payment failed. Please try again.").slice(0, 500),
-      );
-      return reply.code(302).redirect(redirectUrl.toString());
     } catch (error) {
-      log.error("Error processing payment:", error);
-      return reply.code(400).send("Payment processing failed");
+      log.error("Error recording failed redirect payment:", error);
     }
+    return reply.code(302).redirect(redirectUrl.toString());
   });
 
 fastify.post<{ Body: any }>(
