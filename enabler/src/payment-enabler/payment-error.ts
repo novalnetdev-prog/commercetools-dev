@@ -3,7 +3,18 @@ const ALERT_ID = 'novalnet-payment-error';
 let paymentContainer: Element | null = null;
 
 export function setPaymentErrorContainer(selector: string): void {
-  paymentContainer = document.querySelector(selector);
+
+  paymentContainer = selector.startsWith('#')
+    ? document.getElementById(selector.slice(1))
+    : null;
+  if (!paymentContainer) {
+    try {
+      paymentContainer = document.querySelector(selector);
+    } catch {
+      // Error display must never prevent the payment component from mounting.
+      paymentContainer = null;
+    }
+  }
   const alert = document.getElementById(ALERT_ID);
   if (alert && paymentContainer) paymentContainer.prepend(alert);
 }
