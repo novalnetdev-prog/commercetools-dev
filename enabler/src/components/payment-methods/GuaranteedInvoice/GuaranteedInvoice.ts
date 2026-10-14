@@ -393,7 +393,7 @@ export class GuaranteedInvoice extends BaseComponent {
             for="nn_birthdate"
             style="font-size:14px;font-weight:600;color:#333;margin-bottom:6px;"
           >
-            ${isGerman ? 'Geburtsdatum' : 'Date of Birth'} (DD.MM.YYYY)
+            ${isGerman ? 'Geburtsdatum (TT.MM.JJJJ)' : 'Date of Birth (DD.MM.YYYY)'}
             <span style="color:red;">*</span>
           </label>
 
@@ -401,7 +401,7 @@ export class GuaranteedInvoice extends BaseComponent {
             type="text"
             id="nn_birthdate"
             name="nn_birthdate"
-            placeholder="DD.MM.YYYY"
+            placeholder="${isGerman ? 'TT.MM.JJJJ' : 'DD.MM.YYYY'}"
             maxlength="10"
             autocomplete="bday"
             style="padding:12px 14px;border:1px solid #d4d4d4;border-radius:6px;font-size:15px;"
