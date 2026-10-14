@@ -34,6 +34,7 @@ import {
   createTransactionCommentsType,
 } from "../utils/custom-fields";
 import { projectApiRoot } from "../utils/ct-client";
+import { webhookCallerIp } from "../utils/webhook-ip";
 import { redirectFailureResponse } from "../utils/redirect-failure";
 import customObjectService from "./ct-custom-object.service";
 import { getPaymentMethodName, getPaymentMethodNames, SupportedLocale, t } from "../i18n";
@@ -46,7 +47,7 @@ import type {
 } from "./novalnet-order-state.service";
 import { bankTransferDetails, bankTransferReference, buildPayPalCartInfo,
   formatNovalnetAmount, getNovalnetSystemInfo, mergeInitialPaymentComments,
-  updateBankTransferReference } from "../utils/novalnet-request";
+  updateBankTransferReference, paymentTransactionComments } from "../utils/novalnet-request";
 
 type NovalnetConfig = {
   testMode: string;
@@ -635,7 +636,9 @@ export class NovalnetPaymentService extends AbstractPaymentService {
       if (!guaranteePayment) {
         if (!isForceNonGuarantee) {
           throw new CheckoutPaymentError(
-            "Payment conditions were not met. Please choose another payment method.",
+            lang === "de"
+              ? "Die Zahlungsbedingungen wurden nicht erfüllt. Bitte wählen Sie eine andere Zahlungsmethode aus."
+              : "Payment conditions were not met. Please choose another payment method.",
           );
         }
 
@@ -1109,8 +1112,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
   
   const order = orderResponse.body;
   
-    const paymentComment =
-      transaction.custom?.fields?.transactionComments ?? "";
+    const paymentComment = paymentTransactionComments(payment.transactions ?? []);
   
     log.info("[ORDER_SYNC] Order fetched", {
       orderId: order.id,
@@ -3001,7 +3003,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       });
 
       throw new Error(
-        `Unauthorized access from IP ${req.ip}`
+        `Unauthorized access from IP ${webhookCallerIp(req.ip, req.headers["x-forwarded-for"])}`
       );
     }
   }
@@ -3530,7 +3532,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     const authorizationMinimum = Number(minimumAmount);
     const orderAmount = Number(parsedCart?.taxedPrice?.totalGross?.centAmount ?? 0);
-    const authorizePayPal = type.toUpperCase() === "PAYPAL" &&
+    const authorizeRedirect = ["PAYPAL", "CREDITCARD"].includes(type.toUpperCase()) &&
       paymentAction?.toLowerCase() === "authorize" &&
       Number.isFinite(authorizationMinimum) &&
       (authorizationMinimum <= 0 || orderAmount >= authorizationMinimum);
@@ -3539,7 +3541,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     try {
       parsedResponse = await this.callNovalnet(
-        authorizePayPal
+        authorizeRedirect
           ? "https://payport.novalnet.de/v2/authorize"
           : "https://payport.novalnet.de/v2/payment",
         novalnetPayload,
@@ -3923,7 +3925,7 @@ private buildTransactionComments(
             eventTID,
             formattedAmount,
             date,
-	    time,
+	    	time,
           });
 
         case "DUE_DATE":
