@@ -61,6 +61,7 @@ export class SepaBuilder
 }
 
 export class Sepa extends BaseComponent {
+  private formContainer?: Element;
 
   private showPayButton: boolean;
 
@@ -236,6 +237,8 @@ export class Sepa extends BaseComponent {
 
       return;
     }
+
+    this.formContainer = container;
 
     container.insertAdjacentHTML(
       'afterbegin',
@@ -505,9 +508,7 @@ export class Sepa extends BaseComponent {
         ) as HTMLInputElement;
 
       const bicInput =
-        document.getElementById(
-          'nn_sepa_bic'
-        ) as HTMLInputElement;
+        this.formContainer?.querySelector<HTMLInputElement>('#nn_sepa_bic');
 
       const accountHolder =
         accountHolderInput
