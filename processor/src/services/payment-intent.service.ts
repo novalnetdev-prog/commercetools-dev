@@ -341,8 +341,10 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
   });
   const root = projectApiRoot.payments().withId({ ID: payment.id });
   const latest = (await root.get().execute()).body;
-  requireValue(!latest.transactions.some((tx) => tx.type === "Charge" && tx.state === "Success"),
-    "Pre-credit reduction received after charge.");
+  requireValue(Number(reference.privateData.creditedAmount ?? 0) === 0 &&
+    !latest.transactions.some((tx) => tx.type === "Charge" && tx.state === "Success" &&
+      tx.interactionId === `${reference.pspReference}-Charge`),
+    "Pre-credit reduction received after credit.");
   const comment = commentFor("refund", latest, reference, amount);
   if (cancelled) {
     await saveCaptureOrCancel(latest, reference, "cancel", reply, comment);
@@ -485,7 +487,7 @@ export async function executePaymentIntent(
     ? action.action === "refundPayment"
       ? action.amount.centAmount : sum(payment, "Charge") - sum(payment, "Refund", ["Pending", "Success"])
     : 0;
-  if (kind === "refund" && reference.original.type === "Authorization") {
+  if (kind === "refund") {
     const alreadyReduced = Number(reference.privateData.preCreditRefundedAmount ?? 0);
     requireValue(Number.isSafeInteger(alreadyReduced) && alreadyReduced >= 0 &&
       refundAmount <= reference.original.amount.centAmount - alreadyReduced,
@@ -500,7 +502,7 @@ export async function executePaymentIntent(
       String(reply.transaction.tid) !== reference.tid) {
     throw new Error("Novalnet response TID does not match the original transaction.");
   }
-  const preCredit = kind === "refund" && reference.original.type === "Authorization" &&
+  const preCredit = kind === "refund" &&
     !reply.transaction?.refund?.tid && !reply.refund?.tid &&
     String(reply.result?.status ?? "").toUpperCase() === "SUCCESS" &&
     ["DEACTIVATED", "PENDING"].includes(String(reply.transaction?.status ?? "").toUpperCase());
