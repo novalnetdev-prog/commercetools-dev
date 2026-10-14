@@ -35,7 +35,7 @@ deployAs:
           description: "JWT Issuer for jwt validation"
           required: true
           default: "https://mc-api.europe-west1.gcp.commercetools.com"
-        - key: NOVALNET_PUBLIC_KEY
+        - key: NOVALNET_PRODUCT_ACTIVATION_KEY
           description: Your product activation key is a unique token for merchant authentication and payment processing. Get your Product activation key from the Novalnet Admin Portal `:` Projects > Choose your project > API credentials > API Signature 
           required: true
         - key: NOVALNET_TARIFF_KEY
@@ -167,6 +167,10 @@ deployAs:
           description: The payment will be processed in the test mode therefore amount for this transaction will not be charged (1=Test, 0=Live)
           required: false
           default: "0"
+        - key: NOVALNET_IDEAL_TEST_MODE
+          description: The iDEAL | Wero payment will be processed in test mode (1=Test, 0=Live)
+          required: false
+          default: "0"
         - key: NOVALNET_EPS_TEST_MODE
           description: The payment will be processed in the test mode therefore amount for this transaction will not be charged (1=Test, 0=Live)
           required: false
@@ -231,7 +235,7 @@ deployAs:
           description: Merchant return URL for payment completion
           required: false
       securedConfiguration:
-        - key: NOVALNET_PRIVATE_KEY
+        - key: NOVALNET_PAYMENT_ACCESS_KEY
           description: Your secret key used to encrypt the data to avoid user manipulation and fraud. Get your Payment access key from the Novalnet Admin Portal Projects > Choose your project > API credentials > Payment access key
           required: true
         - key: CTP_CLIENT_SECRET
