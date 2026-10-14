@@ -32,6 +32,7 @@ export function mapNovalnetOrderStates({
         : null;
     case "CHARGEBACK":
     case "RETURN_DEBIT":
+    case "RETURN_DEBIT_SEPA":
     case "REVERSAL":
       return isPartialChargeback
         ? { paymentState: "BalanceDue" }
