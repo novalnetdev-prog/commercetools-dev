@@ -54,6 +54,7 @@ export class GuaranteedSepaBuilder
 }
 
 export class GuaranteedSepa extends BaseComponent {
+  private formContainer?: Element;
 
   private showPayButton: boolean;
 
@@ -93,6 +94,8 @@ export class GuaranteedSepa extends BaseComponent {
 
       return;
     }
+
+    this.formContainer = container;
 
     await this.loadNovalnetUtility();
 
@@ -324,9 +327,9 @@ export class GuaranteedSepa extends BaseComponent {
 
       const bic =
         (
-          document.getElementById(
-            "nn_sepa_bic"
-          ) as HTMLInputElement
+          this.formContainer?.querySelector<HTMLInputElement>(
+            "#nn_guaranteesepa_bic"
+          )
         )?.value.trim();
 
       const birthdate =
@@ -548,7 +551,7 @@ export class GuaranteedSepa extends BaseComponent {
             style="display:none;flex-direction:column;width:100%;"
           >
             <label
-              for="nn_sepa_bic"
+              for="nn_guaranteesepa_bic"
               style="font-size:14px;font-weight:600;margin-bottom:6px;"
             >
               BIC
@@ -557,8 +560,8 @@ export class GuaranteedSepa extends BaseComponent {
           
             <input
               type="text"
-              id="nn_sepa_bic"
-              name="nn_sepa_bic"
+              id="nn_guaranteesepa_bic"
+              name="nn_guaranteesepa_bic"
               placeholder="XXXX XX XX XXX"
               style="
                 width:100%;
