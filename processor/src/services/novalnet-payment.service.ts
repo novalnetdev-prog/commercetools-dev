@@ -1255,7 +1255,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
   isPartialChargeback?: boolean;
 } | null> {
   const captureEvent = eventType === "TRANSACTION_CAPTURE" || eventType === "TRANSACTION_UPDATE";
-  const chargebackEvent = ["CHARGEBACK", "RETURN_DEBIT", "REVERSAL"].includes(eventType);
+  const chargebackEvent = ["CHARGEBACK", "RETURN_DEBIT", "RETURN_DEBIT_SEPA", "REVERSAL"].includes(eventType);
   if (!captureEvent && !chargebackEvent) return {};
 
   const payment = (await projectApiRoot.payments().withId({ ID: paymentId }).get().execute()).body;
@@ -1715,8 +1715,15 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
         transactionComments = await this.handleCredit(webhook);
         break;
 
+      case "PAYMENT_REMINDER_1":
+      case "PAYMENT_REMINDER_2":
+      case "SUBMISSION_TO_COLLECTION_AGENCY":
+        transactionComments = await this.handleInformationalEvent(webhook);
+        break;
+
       case "CHARGEBACK":
       case "RETURN_DEBIT":
+      case "RETURN_DEBIT_SEPA":
       case "REVERSAL":
           transactionComments = await this.handleChargeback(webhook);
           break;
@@ -1745,6 +1752,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       "TRANSACTION_UPDATE",
       "CHARGEBACK",
       "RETURN_DEBIT",
+      "RETURN_DEBIT_SEPA",
       "REVERSAL",
     ].includes(eventType)
   ) {
@@ -2176,7 +2184,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     const payment = (await this.ctPaymentService.getPayment({ id: paymentId } as any)) as any;
     const currentPayment = payment?.body ?? payment;
     const authorization = currentPayment.transactions?.find((tx: any) =>
-      tx.type === "Authorization" && tx.interactionId === pspReference,
+      (tx.type === "Authorization" || tx.type === "Charge") && tx.interactionId === pspReference,
     );
     if (!authorization) throw new Error("Pre-credit authorization transaction not found");
     if (currentPayment.transactions?.some((tx: any) =>
@@ -2184,8 +2192,9 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       tx.interactionId === `${pspReference}-CancelAuthorization`,
     )) return "Already synchronized";
     if (currentPayment.transactions?.some((tx: any) =>
-      tx.type === "Charge" && tx.state === "Success",
-    )) throw new Error("Pre-credit reduction received after charge");
+      tx.type === "Charge" && tx.state === "Success" &&
+      tx.interactionId === `${pspReference}-Charge`,
+    )) throw new Error("Pre-credit reduction received after credit");
 
     const plannedAmount = Number(authorization.amount.centAmount);
     if (!Number.isSafeInteger(plannedAmount) || plannedAmount <= 0 ||
@@ -2316,8 +2325,6 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     if (!refundTid) {
       return this.handlePreCreditPartialRefund(webhook);
     }
-    if (!refundTid) throw new Error("Missing refund reference");
-
     const payment = (
       await projectApiRoot
         .payments()
@@ -2653,7 +2660,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
 
     const authorization = payment.transactions.find(
       (tx: any) =>
-        tx.type === "Authorization" &&
+        (tx.type === "Authorization" || tx.type === "Charge") &&
         tx.interactionId === pspReference,
     );
 
@@ -2752,7 +2759,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       skipSettlement: true,
     });
 
-    if (fullyPaid) {
+    if (fullyPaid && authorization.type === "Authorization") {
       await this.addSettlementTransactionIfRequired({
         paymentId, pspReference, transactionType: "Charge",
         amount: creditedAmount, currency, status: "CONFIRMED",
@@ -2827,6 +2834,22 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     });
 
     return transactionComments;
+  }
+
+
+  private async handleInformationalEvent(webhook: Record<string, any>): Promise<string> {
+    const paymentId = webhook.custom?.["ctpayment-id"] ?? webhook.custom?.inputval1;
+    const pspReference = webhook.custom?.pspReference ?? webhook.custom?.inputval2;
+    if (!paymentId || !pspReference) throw new Error("Missing payment reference");
+    const locale: SupportedLocale = webhook.custom?.lang === "en" ? "en" : "de";
+    const comment = this.buildTransactionComments(webhook, locale);
+    await this.updatePaymentTransaction({
+      paymentId, pspReference, transactionComments: comment,
+      avoidDuplicateComment: true, setCustomType: true,
+      setStatusInterfaceCode: false, changeTransactionState: false,
+    });
+    await this.syncPaymentToOrder(paymentId, pspReference);
+    return comment;
   }
 
 	public async handleChargeback(
@@ -3898,6 +3921,17 @@ private buildTransactionComments(
         ? t(locale, "callback.refundTidSuffix", { refundTID: eventTID })
         : "");
 
+    case "PAYMENT_REMINDER_1":
+    case "PAYMENT_REMINDER_2":
+      return t(locale, "callback.paymentRemainderComment", {
+        reminderIndex: eventType.slice(-1),
+      });
+
+    case "SUBMISSION_TO_COLLECTION_AGENCY":
+      return t(locale, "callback.collectionSubmissionComment", {
+        collectionReference: String(webhook.collection?.reference ?? ""),
+      });
+
     case "CREDIT": {
 	  return t(locale, "callback.creditComment", {
 	    parentTID,
@@ -3949,6 +3983,7 @@ private buildTransactionComments(
     }
     case "CHARGEBACK":
     case "RETURN_DEBIT":
+    case "RETURN_DEBIT_SEPA":
     case "REVERSAL":
       return t(locale, "callback.chargebackComment", {
       parentTID,
