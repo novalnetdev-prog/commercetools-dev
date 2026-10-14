@@ -112,7 +112,7 @@ function validate(payment: Payment, action: Action): void {
 }
 
 async function findReference(payment: Payment, kind: Modification, action: Action): Promise<Reference> {
-  const original = [...(payment.transactions ?? [])].reverse().find((transaction) =>
+  const matches = [...(payment.transactions ?? [])].reverse().filter((transaction) =>
     kind === "refund"
       ? ((transaction.type === "Charge" && transaction.state === "Success") ||
         (action.action === "refundPayment" && sum(payment, "Charge") === 0 &&
@@ -120,12 +120,18 @@ async function findReference(payment: Payment, kind: Modification, action: Actio
         (action.action !== "refundPayment" || !action.transactionId || transaction.id === action.transactionId)
       : transaction.type === "Authorization" && transaction.state === "Success",
   );
+
+  const original = kind === "refund"
+    ? matches.find((transaction) => !transaction.interactionId?.endsWith("-Charge")) ?? matches[0]
+    : matches[0];
   requireValue(original?.interactionId, "Original payment transaction not found.");
 
   const pspReference = original.type === "Charge" && original.interactionId.endsWith("-Charge")
     ? original.interactionId.slice(0, -"-Charge".length)
     : original.interactionId;
-  const privateObject = await customObjectService.get("nn-private-data", `${payment.id}-${pspReference}`);
+  const privateObject = (await projectApiRoot.customObjects().withContainerAndKey({
+    container: "nn-private-data", key: `${payment.id}-${pspReference}`,
+  }).get().execute()).body;
   requireValue(privateObject?.value, "Private payment data not found.");
   const tid = String(privateObject.value.tid ?? "");
   requireValue(/^\d+$/.test(tid), "Novalnet TID missing.");
@@ -332,9 +338,22 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
   reply: NovalnetReply, amount: number): Promise<void> {
   const status = String(reply.transaction?.status ?? "").toUpperCase();
   const originalAmount = reference.original.amount.centAmount;
+  let previouslyRefunded = Number(reference.privateData.preCreditRefundedAmount ?? 0);
+  if (status === "DEACTIVATED" &&
+      originalAmount - previouslyRefunded !== amount &&
+      Number(reply.transaction?.amount) === amount) {
+    const reportedPrevious = originalAmount - amount;
+    if (Number.isSafeInteger(reportedPrevious) && reportedPrevious > previouslyRefunded &&
+        Number(reference.privateData.creditedAmount ?? 0) === 0) {
+      log.warn("[PAYMENT_INTENT] Reconciling missing pre-credit reduction from Novalnet balance", {
+        paymentId: payment.id, previouslyRefunded, reportedPrevious,
+      });
+      previouslyRefunded = reportedPrevious;
+    }
+  }
   const { cancelled, remaining } = reconcilePreCreditRefund({
     originalAmount,
-    previouslyRefunded: Number(reference.privateData.preCreditRefundedAmount ?? 0),
+    previouslyRefunded,
     refundAmount: amount,
     expectedCurrency: payment.amountPlanned.currencyCode,
     transaction: reply.transaction,
@@ -344,6 +363,14 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
   requireValue(Number(reference.privateData.creditedAmount ?? 0) === 0,
     "Pre-credit reduction received after credit.");
   const comment = commentFor("refund", latest, reference, amount);
+
+  await customObjectService.upsert("nn-private-data", `${payment.id}-${reference.pspReference}`, {
+    ...reference.privateData,
+    status,
+    preCreditRefundedAmount: originalAmount - remaining,
+    preCreditRemainingAmount: remaining,
+    additionalInfo: { ...(reference.privateData.additionalInfo ?? {}), comments: comment },
+  });
   if (cancelled) {
     await saveCaptureOrCancel(latest, reference, "cancel", reply, comment);
   } else {
@@ -365,19 +392,6 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
       actions.push({ action: "setStatusInterfaceCode", interfaceCode: String(statusCode) });
     }
     if (actions.length) await root.post({ body: { version: latest.version, actions } }).execute();
-  }
-  try {
-    await customObjectService.upsert("nn-private-data", `${payment.id}-${reference.pspReference}`, {
-      ...reference.privateData,
-      status,
-      preCreditRefundedAmount: originalAmount - remaining,
-      preCreditRemainingAmount: remaining,
-      additionalInfo: { ...(reference.privateData.additionalInfo ?? {}), comments: comment },
-    });
-  } catch (error) {
-    log.error("[PAYMENT_INTENT] Pre-credit refund saved; private-data sync failed", {
-      paymentId: payment.id, error,
-    });
   }
   if (!cancelled) {
     try { await syncOrderComment(payment.id, reference.pspReference); }
@@ -500,14 +514,16 @@ export async function executePaymentIntent(
       String(reply.transaction.tid) !== reference.tid) {
     throw new Error("Novalnet response TID does not match the original transaction.");
   }
+  const responseStatus = String(reply.transaction?.status ?? "").toUpperCase();
   const preCredit = kind === "refund" &&
-    !reply.transaction?.refund?.tid && !reply.refund?.tid &&
     String(reply.result?.status ?? "").toUpperCase() === "SUCCESS" &&
-    ["DEACTIVATED", "PENDING"].includes(String(reply.transaction?.status ?? "").toUpperCase());
+    ["DEACTIVATED", "PENDING"].includes(responseStatus) &&
+    !reply.transaction?.refund?.tid && !reply.refund?.tid;
   const outcome = preCredit ? PaymentModificationStatus.APPROVED : getOutcome(kind, reply);
   log.info("[PAYMENT_INTENT] Novalnet modification result", {
     paymentId, kind, tid: reference.tid, outcome,
     apiStatus: reply.result?.status, transactionStatus: reply.transaction?.status,
+    refundTid: reply.transaction?.refund?.tid ?? reply.refund?.tid,
   });
   if (outcome !== PaymentModificationStatus.APPROVED) {
     return { outcome, paymentReference: payment.id };
