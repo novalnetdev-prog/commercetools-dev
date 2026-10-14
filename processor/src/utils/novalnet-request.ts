@@ -129,3 +129,15 @@ export function buildPayPalCartInfo(cart: any, locale: SupportedLocale) {
     line_items: lineItems,
   };
 }
+
+export function paymentTransactionComments(transactions: Array<{ custom?: { fields?: Record<string, unknown> } }>): string {
+  let comments = "";
+  for (const transaction of transactions) {
+    const value = transaction.custom?.fields?.transactionComments;
+    if (typeof value !== "string") continue;
+    for (const block of value.split("\n\n---\n").map((item) => item.trim()).filter(Boolean)) {
+      if (!comments.includes(block)) comments += comments ? `\n\n---\n${block}` : block;
+    }
+  }
+  return comments;
+}
