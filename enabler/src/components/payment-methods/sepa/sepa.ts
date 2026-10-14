@@ -1,3 +1,4 @@
+import { accountHolderValidationMessage, bindAccountHolderValidation, isValidAccountHolder } from "../account-holder";
 import {
   ComponentOptions,
   PaymentComponent,
@@ -239,6 +240,11 @@ export class Sepa extends BaseComponent {
     container.insertAdjacentHTML(
       'afterbegin',
       this._getTemplate()
+    );
+    bindAccountHolderValidation(
+      container.querySelector<HTMLInputElement>('#nn_account_holder'),
+      this.getLanguage(),
+      (message) => this.onError(message),
     );
 
     setTimeout(
@@ -530,6 +536,11 @@ export class Sepa extends BaseComponent {
           this.getLanguage() === 'de' ? 'Bitte geben Sie den Kontoinhaber ein.' : 'Please enter account holder name'
         );
 
+        return;
+      }
+
+      if (!isValidAccountHolder(accountHolder)) {
+        this.onError(accountHolderValidationMessage(this.getLanguage()));
         return;
       }
 
