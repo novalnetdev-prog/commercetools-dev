@@ -1,3 +1,4 @@
+import { accountHolderValidationMessage, bindAccountHolderValidation, isValidAccountHolder } from "../account-holder";
 import {
   ComponentOptions,
   PaymentComponent,
@@ -85,6 +86,11 @@ export class Ach extends BaseComponent {
     container.insertAdjacentHTML(
       'afterbegin',
       this._getTemplate()
+    );
+    bindAccountHolderValidation(
+      container.querySelector<HTMLInputElement>('#achForm-accHolder'),
+      this.getLanguage(),
+      (message) => this.onError(message),
     );
 
     setTimeout(
@@ -196,6 +202,11 @@ export class Ach extends BaseComponent {
           this.getLanguage() === 'de' ? 'Bitte füllen Sie alle Pflichtfelder aus.' : 'Please fill all required fields.'
         );
 
+        return;
+      }
+
+      if (!isValidAccountHolder(accountHolder)) {
+        this.onError(accountHolderValidationMessage(this.getLanguage()));
         return;
       }
 
