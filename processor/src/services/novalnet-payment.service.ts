@@ -2191,11 +2191,6 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
       tx.type === "CancelAuthorization" && tx.state === "Success" &&
       tx.interactionId === `${pspReference}-CancelAuthorization`,
     )) return "Already synchronized";
-    if (currentPayment.transactions?.some((tx: any) =>
-      tx.type === "Charge" && tx.state === "Success" &&
-      tx.interactionId === `${pspReference}-Charge`,
-    )) throw new Error("Pre-credit reduction received after credit");
-
     const plannedAmount = Number(authorization.amount.centAmount);
     if (!Number.isSafeInteger(plannedAmount) || plannedAmount <= 0 ||
         !Number.isSafeInteger(refundAmount) || refundAmount <= 0 ||
