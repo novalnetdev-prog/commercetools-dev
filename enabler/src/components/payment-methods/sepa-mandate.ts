@@ -3,14 +3,14 @@ export function sepaMandateTemplate(locale: string): string {
 
   const text = isGerman
     ? {
-        grant: 'Hiermit erteile ich das SEPA-Lastschriftmandat (elektronische Übermittlung) und bestätige, dass die angegebenen Bankdaten korrekt sind!',
-        authorization: 'Ich ermächtige (A) die Novalnet AG, meinem Kreditinstitut Anweisungen zur Belastung meines Kontos zu erteilen, und (B) mein Kreditinstitut, mein Konto entsprechend den Anweisungen der Novalnet AG zu belasten.',
+        grant: 'Ich erteile hiermit das SEPA-Lastschriftmandat (elektronische Übermittlung) und bestätige, dass die Bankverbindung korrekt ist',
+        authorization: 'Ich ermächtige den Zahlungsempfänger, Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von dem Zahlungsempfänger auf mein Konto gezogenen Lastschriften einzulösen.',
         creditor: 'Gläubiger-Identifikationsnummer: DE53ZZZ00000004253',
         note: 'Hinweis:',
-        refund: 'Sie haben das Recht, von Ihrem Kreditinstitut eine Erstattung des belasteten Betrags nach den mit Ihrem Kreditinstitut vereinbarten Bedingungen zu verlangen. Die Erstattung muss innerhalb von acht Wochen ab dem Tag der Belastung Ihres Kontos geltend gemacht werden.',
+        refund: 'Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.',
       }
     : {
-        grant: 'I hereby grant the mandate for the SEPA direct debit (electronic transmission) and confirm that the given bank details are correct!',
+        grant: 'I hereby grant the mandate for the SEPA direct debit (electronic transmission) and confirm that the given bank details are correct',
         authorization: 'I authorise (A) Novalnet AG to send instructions to my bank to debit my account and (B) my bank to debit my account in accordance with the instructions from Novalnet AG.',
         creditor: 'Creditor identifier: DE53ZZZ00000004253',
         note: 'Note:',
