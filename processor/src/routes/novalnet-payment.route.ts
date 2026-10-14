@@ -132,10 +132,11 @@ export const paymentRoutes = async (
           stack: error instanceof Error ? error.stack : undefined,
           name: error instanceof Error ? error.name : undefined,
         });
-        return reply.status(500).send({
+        return reply.status(error instanceof CheckoutPaymentError ? 200 : 500).send({
           paymentReference: "",
           transactionStatus: "FAILURE",
-          transactionStatusText: "Payment initialization failed",
+          transactionStatusText: error instanceof CheckoutPaymentError
+            ? error.message : "Payment initialization failed",
         });
       }
     },
@@ -339,10 +340,7 @@ fastify.post<{ Body: any }>(
       }
 
       if (message.includes("Unauthorized access")) {
-        return reply.code(403).send({
-          success: false,
-          message,
-        });
+        return reply.code(403).send({ message });
       }
 
       if (
