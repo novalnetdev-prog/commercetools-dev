@@ -341,9 +341,7 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
   });
   const root = projectApiRoot.payments().withId({ ID: payment.id });
   const latest = (await root.get().execute()).body;
-  requireValue(Number(reference.privateData.creditedAmount ?? 0) === 0 &&
-    !latest.transactions.some((tx) => tx.type === "Charge" && tx.state === "Success" &&
-      tx.interactionId === `${reference.pspReference}-Charge`),
+  requireValue(Number(reference.privateData.creditedAmount ?? 0) === 0,
     "Pre-credit reduction received after credit.");
   const comment = commentFor("refund", latest, reference, amount);
   if (cancelled) {
