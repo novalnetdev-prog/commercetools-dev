@@ -1,9 +1,15 @@
 const QUERY_PARAMETER = 'novalnetPaymentError';
 const ALERT_ID = 'novalnet-payment-error';
-const ERROR_DISPLAY_MS = 12_000;
+const ERROR_DISPLAY_MS = 8_000;
 let dismissTimer: ReturnType<typeof setTimeout> | undefined;
+let returnedErrorExpires = 0;
+let alertObserver: MutationObserver | undefined;
 
-export function clearPaymentError(): void {
+export function clearPaymentError(force = false): void {
+  if (!force && Date.now() < returnedErrorExpires) return;
+  returnedErrorExpires = 0;
+  alertObserver?.disconnect();
+  alertObserver = undefined;
   if (dismissTimer !== undefined) {
     clearTimeout(dismissTimer);
     dismissTimer = undefined;
@@ -24,6 +30,7 @@ export async function readProcessorPaymentError(response: Response, fallback: st
 export function showPaymentError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error ?? '');
   if (!message.trim()) return;
+  returnedErrorExpires = 0;
 
   let alert = document.getElementById(ALERT_ID);
   if (!alert) {
@@ -44,9 +51,16 @@ export function showPaymentError(error: unknown): void {
   
   document.body.append(alert);
 
+  if (!alertObserver && typeof MutationObserver !== 'undefined') {
+    alertObserver = new MutationObserver(() => {
+      if (document.body && alert && !document.body.contains(alert)) document.body.append(alert);
+    });
+    alertObserver.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
   alert.textContent = message.slice(0, 500);
   if (dismissTimer !== undefined) clearTimeout(dismissTimer);
-  dismissTimer = setTimeout(clearPaymentError, ERROR_DISPLAY_MS);
+  dismissTimer = setTimeout(() => clearPaymentError(true), ERROR_DISPLAY_MS);
 }
 
 export function showReturnedPaymentError(): void {
@@ -56,6 +70,7 @@ export function showReturnedPaymentError(): void {
 
   url.searchParams.delete(QUERY_PARAMETER);
   showPaymentError(message);
+  returnedErrorExpires = Date.now() + ERROR_DISPLAY_MS;
   try {
     window.history.replaceState(window.history.state, '', url.toString());
   } catch {
