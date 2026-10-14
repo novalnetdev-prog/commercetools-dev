@@ -36,7 +36,12 @@ export function showPaymentError(error: unknown): void {
       'border:1px solid #c62828;border-radius:4px;color:#8e1616;' +
       'background:#fff4f4;box-shadow:0 3px 12px rgba(0,0,0,.2);';
   }
-
+  
+  if (!document.body) {
+    document.addEventListener('DOMContentLoaded', () => showPaymentError(message), { once: true });
+    return;
+  }
+  
   document.body.append(alert);
 
   alert.textContent = message.slice(0, 500);
