@@ -16,7 +16,8 @@ import {
 } from "../utils/custom-fields";
 import customObjectService from "./ct-custom-object.service";
 import { mapNovalnetOrderStates } from "./novalnet-order-state.service";
-import { formatNovalnetAmount } from "../utils/novalnet-request";
+import { reconcilePreCreditRefund } from "./pre-credit-refund";
+import { formatNovalnetAmount, paymentTransactionComments } from "../utils/novalnet-request";
 
 const BASE_URL = "https://payport.novalnet.de/v2";
 type Action = PaymentIntentRequestSchemaDTO["actions"][number];
@@ -80,6 +81,9 @@ function validate(payment: Payment, action: Action): void {
   const chargeStarted = sum(payment, "Charge", ["Pending", "Success"]) > 0;
   const refundedOrPending = sum(payment, "Refund", ["Pending", "Success"]);
   const cancelled = sum(payment, "CancelAuthorization", ["Pending", "Success"]) > 0;
+  const preCreditAuthorization = (payment.transactions ?? []).find((tx) =>
+    tx.type === "Authorization" && ["Pending", "Success"].includes(tx.state));
+  const preCredit = action.action === "refundPayment" && charged === 0 && !!preCreditAuthorization;
 
   if ("amount" in action) {
     requireValue(Number.isSafeInteger(action.amount.centAmount) && action.amount.centAmount > 0,
@@ -98,8 +102,9 @@ function validate(payment: Payment, action: Action): void {
   } else {
     const refundAmount = action.action === "refundPayment"
       ? action.amount.centAmount : charged - refundedOrPending;
-    requireValue(charged > 0 && refundAmount > 0 &&
-      refundAmount <= charged - refundedOrPending,
+    requireValue(preCredit
+      ? !cancelled && refundAmount > 0 && refundAmount <= preCreditAuthorization!.amount.centAmount
+      : charged > 0 && refundAmount > 0 && refundAmount <= charged - refundedOrPending,
       "Refund exceeds the remaining captured amount.");
     requireValue(action.action !== "reversePayment" || authorized === 0 || charged === authorized,
       "Partially captured payment requires separate refund and authorization cancellation.");
@@ -109,7 +114,9 @@ function validate(payment: Payment, action: Action): void {
 async function findReference(payment: Payment, kind: Modification, action: Action): Promise<Reference> {
   const original = [...(payment.transactions ?? [])].reverse().find((transaction) =>
     kind === "refund"
-      ? transaction.type === "Charge" && transaction.state === "Success" &&
+      ? ((transaction.type === "Charge" && transaction.state === "Success") ||
+        (action.action === "refundPayment" && sum(payment, "Charge") === 0 &&
+          transaction.type === "Authorization" && ["Pending", "Success"].includes(transaction.state))) &&
         (action.action !== "refundPayment" || !action.transactionId || transaction.id === action.transactionId)
       : transaction.type === "Authorization" && transaction.state === "Success",
   );
@@ -183,9 +190,8 @@ function commentFor(kind: Modification, payment: Payment, reference: Reference,
   if (kind === "refund") {
     return t(locale, "callback.refundComment", {
       eventTID: reference.tid,
-      refundTID: String(refundTid ?? ""),
       formattedAmount: formatNovalnetAmount(amount, payment.amountPlanned.currencyCode, locale),
-    });
+    }) + (refundTid ? t(locale, "callback.refundTidSuffix", { refundTID: refundTid }) : "");
   }
   const now = new Date();
   const localeCode = locale === "de" ? "de-DE" : "en-GB";
@@ -221,7 +227,7 @@ async function syncOrderComment(paymentId: string, pspReference: string): Promis
   await createOrderPaymentCommentsType();
   const commentType = (await projectApiRoot.types()
     .withKey({ key: "order-payment-comments" }).get().execute()).body;
-  const comment = String(original.custom?.fields?.transactionComments ?? "");
+  const comment = paymentTransactionComments(payment.transactions);
   const actions: any[] = [];
   if (order.custom?.type && order.custom.type.id !== commentType.id) {
     log.warn("[PAYMENT_INTENT] Order has another Custom Type; comment remains on Payment", { paymentId });
@@ -240,12 +246,12 @@ async function syncOrderComment(paymentId: string, pspReference: string): Promis
   }
 }
 
-async function syncIntentOrderStates(paymentId: string, kind: Modification,
+async function syncIntentOrderStates(paymentId: string, kind: Modification | "preCredit",
   reply: NovalnetReply): Promise<void> {
   const states = mapNovalnetOrderStates({
     status: reply.transaction?.status,
     eventType: kind === "capture" ? "TRANSACTION_CAPTURE" :
-      kind === "cancel" ? "TRANSACTION_CANCEL" : "TRANSACTION_REFUND",
+      kind === "cancel" ? "TRANSACTION_CANCEL" : kind === "preCredit" ? "" : "TRANSACTION_REFUND",
     isPartialCapture: false,
   });
   if (!states) return;
@@ -271,13 +277,13 @@ async function syncIntentOrderStates(paymentId: string, kind: Modification,
 }
 
 async function saveCaptureOrCancel(payment: Payment, reference: Reference,
-  kind: "capture" | "cancel", reply: NovalnetReply): Promise<void> {
+  kind: "capture" | "cancel", reply: NovalnetReply, commentOverride?: string): Promise<void> {
   await createTransactionCommentsType();
   const root = projectApiRoot.payments().withId({ ID: payment.id });
   const latest = (await root.get().execute()).body;
   const original = latest.transactions.find((tx) => tx.id === reference.original.id);
   requireValue(original, "Original payment transaction disappeared.");
-  const comment = commentFor(kind, latest, reference, original.amount.centAmount);
+  const comment = commentOverride ?? commentFor(kind, latest, reference, original.amount.centAmount);
   const actions: PaymentUpdateAction[] = [];
   if (!original.custom?.type) {
     actions.push({ action: "setTransactionCustomType", transactionId: original.id,
@@ -319,6 +325,67 @@ async function saveCaptureOrCancel(payment: Payment, reference: Reference,
     log.error("[PAYMENT_INTENT] PSP and Payment saved, Order comment sync failed", {
       paymentId: payment.id, error,
     });
+  }
+}
+
+async function savePreCreditRefund(payment: Payment, reference: Reference,
+  reply: NovalnetReply, amount: number): Promise<void> {
+  const status = String(reply.transaction?.status ?? "").toUpperCase();
+  const originalAmount = reference.original.amount.centAmount;
+  const { cancelled, remaining } = reconcilePreCreditRefund({
+    originalAmount,
+    previouslyRefunded: Number(reference.privateData.preCreditRefundedAmount ?? 0),
+    refundAmount: amount,
+    expectedCurrency: payment.amountPlanned.currencyCode,
+    transaction: reply.transaction,
+  });
+  const root = projectApiRoot.payments().withId({ ID: payment.id });
+  const latest = (await root.get().execute()).body;
+  requireValue(!latest.transactions.some((tx) => tx.type === "Charge" && tx.state === "Success"),
+    "Pre-credit reduction received after charge.");
+  const comment = commentFor("refund", latest, reference, amount);
+  if (cancelled) {
+    await saveCaptureOrCancel(latest, reference, "cancel", reply, comment);
+  } else {
+    await createTransactionCommentsType();
+    const original = latest.transactions.find((tx) => tx.id === reference.original.id);
+    requireValue(original, "Original payment transaction disappeared.");
+    const actions: PaymentUpdateAction[] = [];
+    if (!original.custom?.type) {
+      actions.push({ action: "setTransactionCustomType", transactionId: original.id,
+        type: { key: "novalnet-custom-field", typeId: "type" } });
+    }
+    const combined = appendComment(original.custom?.fields?.transactionComments, comment);
+    if (combined !== original.custom?.fields?.transactionComments) {
+      actions.push({ action: "setTransactionCustomField", transactionId: original.id,
+        name: "transactionComments", value: combined });
+    }
+    const statusCode = reply.transaction?.status_code ?? reply.result?.status_code;
+    if (statusCode != null && latest.paymentStatus?.interfaceCode !== String(statusCode)) {
+      actions.push({ action: "setStatusInterfaceCode", interfaceCode: String(statusCode) });
+    }
+    if (actions.length) await root.post({ body: { version: latest.version, actions } }).execute();
+  }
+  try {
+    await customObjectService.upsert("nn-private-data", `${payment.id}-${reference.pspReference}`, {
+      ...reference.privateData,
+      status,
+      preCreditRefundedAmount: originalAmount - remaining,
+      preCreditRemainingAmount: remaining,
+      additionalInfo: { ...(reference.privateData.additionalInfo ?? {}), comments: comment },
+    });
+  } catch (error) {
+    log.error("[PAYMENT_INTENT] Pre-credit refund saved; private-data sync failed", {
+      paymentId: payment.id, error,
+    });
+  }
+  if (!cancelled) {
+    try { await syncOrderComment(payment.id, reference.pspReference); }
+    catch (error) {
+      log.error("[PAYMENT_INTENT] Pre-credit refund saved; Order comment sync failed", {
+        paymentId: payment.id, error,
+      });
+    }
   }
 }
 
@@ -418,6 +485,12 @@ export async function executePaymentIntent(
     ? action.action === "refundPayment"
       ? action.amount.centAmount : sum(payment, "Charge") - sum(payment, "Refund", ["Pending", "Success"])
     : 0;
+  if (kind === "refund" && reference.original.type === "Authorization") {
+    const alreadyReduced = Number(reference.privateData.preCreditRefundedAmount ?? 0);
+    requireValue(Number.isSafeInteger(alreadyReduced) && alreadyReduced >= 0 &&
+      refundAmount <= reference.original.amount.centAmount - alreadyReduced,
+      "Refund exceeds the remaining pre-credit amount.");
+  }
   if (kind === "refund") transaction.amount = refundAmount;
   const reply = await callNovalnet(endpoint, transaction, {
     shop_invoked: "1",
@@ -427,7 +500,11 @@ export async function executePaymentIntent(
       String(reply.transaction.tid) !== reference.tid) {
     throw new Error("Novalnet response TID does not match the original transaction.");
   }
-  const outcome = getOutcome(kind, reply);
+  const preCredit = kind === "refund" && reference.original.type === "Authorization" &&
+    !reply.transaction?.refund?.tid && !reply.refund?.tid &&
+    String(reply.result?.status ?? "").toUpperCase() === "SUCCESS" &&
+    ["DEACTIVATED", "PENDING"].includes(String(reply.transaction?.status ?? "").toUpperCase());
+  const outcome = preCredit ? PaymentModificationStatus.APPROVED : getOutcome(kind, reply);
   log.info("[PAYMENT_INTENT] Novalnet modification result", {
     paymentId, kind, tid: reference.tid, outcome,
     apiStatus: reply.result?.status, transactionStatus: reply.transaction?.status,
@@ -436,14 +513,18 @@ export async function executePaymentIntent(
     return { outcome, paymentReference: payment.id };
   }
   if (kind === "refund") {
-    if (!await saveRefund(payment, reference, reply, refundAmount)) {
+    if (preCredit) {
+      await savePreCreditRefund(payment, reference, reply, refundAmount);
+    } else if (!await saveRefund(payment, reference, reply, refundAmount)) {
       return { outcome: PaymentModificationStatus.RECEIVED, paymentReference: payment.id };
     }
   } else {
     await saveCaptureOrCancel(payment, reference, kind, reply);
   }
   try {
-    await syncIntentOrderStates(payment.id, kind, reply);
+    await syncIntentOrderStates(payment.id,
+      preCredit ? (String(reply.transaction?.status).toUpperCase() === "DEACTIVATED" ? "cancel" : "preCredit") : kind,
+      reply);
   } catch (error) {
     log.error("[PAYMENT_INTENT] Payment saved, Order state sync failed", {
       paymentId: payment.id, kind, error,
