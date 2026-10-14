@@ -36,8 +36,8 @@ export const config = {
   mockClientKey: process.env.MOCK_CLIENT_KEY,
   mockEnvironment: process.env.MOCK_ENVIRONMENT,
 
-  novalnetPublicKey: process.env.NOVALNET_PUBLIC_KEY!,
-  novalnetPrivateKey: process.env.NOVALNET_PRIVATE_KEY!,
+  novalnetPublicKey: process.env.NOVALNET_PRODUCT_ACTIVATION_KEY!,
+  novalnetPrivateKey: process.env.NOVALNET_PAYMENT_ACCESS_KEY!,
   novalnetTariff: process.env.NOVALNET_TARIFF_KEY!,
   novalnetClientkey: process.env.NOVALNET_CLIENT_KEY!,
   novalnetWebhookTestMode: process.env.NOVALNET_WEBHOOK_TEST_MODE!,
@@ -135,6 +135,8 @@ export const config = {
     process.env.NOVALNET_PAYPAL_PAYMENT_ACTION_MINIMUM_AMOUNT || "0",
 
 
+  novalnet_IDEAL_TestMode:
+    process.env.NOVALNET_IDEAL_TEST_MODE || "0",
   novalnet_APPLEPAY_TestMode:
     process.env.NOVALNET_APPLEPAY_TEST_MODE || "0",
   novalnet_GOOGLEPAY_TestMode:
