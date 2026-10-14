@@ -631,7 +631,7 @@ export class NovalnetPaymentService extends AbstractPaymentService {
         forceNonGuarantee !== undefined &&
         forceNonGuarantee !== null &&
         !Number.isNaN(Number(forceNonGuarantee)) &&
-        Number(forceNonGuarantee) !== 0;
+        Number(forceNonGuarantee) == 1;
 
       if (!guaranteePayment) {
         if (!isForceNonGuarantee) {
