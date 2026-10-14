@@ -1,3 +1,4 @@
+import { accountHolderValidationMessage, bindAccountHolderValidation, isValidAccountHolder } from "../account-holder";
 import {
   ComponentOptions,
   PaymentComponent,
@@ -98,6 +99,11 @@ export class GuaranteedSepa extends BaseComponent {
     container.insertAdjacentHTML(
       "afterbegin",
       this.getTemplate()
+    );
+    bindAccountHolderValidation(
+      container.querySelector<HTMLInputElement>("#nn_guaranteesepa_account_holder"),
+      this.getLanguage(),
+      (message) => this.onError(message),
     );
 
     setTimeout(() => {
@@ -339,6 +345,11 @@ export class GuaranteedSepa extends BaseComponent {
         return;
       }
 
+      if (!isValidAccountHolder(accountHolder)) {
+        this.onError(accountHolderValidationMessage(this.getLanguage()));
+        return;
+      }
+
       if (!iban) {
 
         this.onError(
@@ -565,14 +576,14 @@ export class GuaranteedSepa extends BaseComponent {
               for="nn_guaranteesepa_dob"
               style="font-size:14px;font-weight:600;margin-bottom:6px;"
             >
-              ${isGerman ? 'Geburtsdatum' : 'Date of Birth'}
+              ${isGerman ? 'Geburtsdatum (TT.MM.JJJJ)' : 'Date of Birth (DD.MM.YYYY)'}
               <span style="color:red;">*</span>
             </label>
 
             <input
               type="text"
               id="nn_guaranteesepa_dob"
-              placeholder="DD.MM.YYYY"
+              placeholder="${isGerman ? 'TT.MM.JJJJ' : 'DD.MM.YYYY'}"
               maxlength="10"
               autocomplete="bday"
               style="padding:12px 14px;border:1px solid #d4d4d4;border-radius:6px;font-size:15px;"
