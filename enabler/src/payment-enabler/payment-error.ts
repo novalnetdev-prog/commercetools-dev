@@ -4,6 +4,7 @@ const ERROR_DISPLAY_MS = 8_000;
 let dismissTimer: ReturnType<typeof setTimeout> | undefined;
 let returnedErrorExpires = 0;
 let alertObserver: MutationObserver | undefined;
+let returnedErrorMessage: string | undefined;
 
 export function clearPaymentError(force = false): void {
   if (!force && Date.now() < returnedErrorExpires) return;
@@ -63,17 +64,21 @@ export function showPaymentError(error: unknown): void {
   dismissTimer = setTimeout(() => clearPaymentError(true), ERROR_DISPLAY_MS);
 }
 
-export function showReturnedPaymentError(): void {
+export function showReturnedPaymentError(paymentMethodsReady = false): void {
   const url = new URL(window.location.href);
-  const message = url.searchParams.get(QUERY_PARAMETER);
+  const message = url.searchParams.get(QUERY_PARAMETER) ?? returnedErrorMessage;
   if (!message) return;
 
-  url.searchParams.delete(QUERY_PARAMETER);
+  returnedErrorMessage = message;
   showPaymentError(message);
   returnedErrorExpires = Date.now() + ERROR_DISPLAY_MS;
-  try {
-    window.history.replaceState(window.history.state, '', url.toString());
-  } catch {
-    // The message is still visible if the host restricts history changes.
+  if (paymentMethodsReady) {
+    url.searchParams.delete(QUERY_PARAMETER);
+    returnedErrorMessage = undefined;
+    try {
+      window.history.replaceState(window.history.state, '', url.toString());
+    } catch {
+      // The message is still visible if the host restricts history changes.
+    }
   }
 }
