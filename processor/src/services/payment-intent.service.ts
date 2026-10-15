@@ -218,37 +218,56 @@ function appendComment(existing: unknown, addition: string): string {
     previous ? `${previous}\n\n---\n${addition}` : addition;
 }
 
-async function syncOrderComment(paymentId: string, pspReference: string): Promise<void> {
+async function syncOrderComment(paymentId: string, pspReference: string,
+  requiredComment?: string): Promise<void> {
   const payment = (await projectApiRoot.payments().withId({ ID: paymentId }).get().execute()).body;
   const original = [...payment.transactions].reverse().find((tx) => tx.interactionId === pspReference);
   if (!original) return;
-  const orderResults = await projectApiRoot.orders().get({ queryArgs: {
-    where: `paymentInfo(payments(id="${paymentId}"))`, limit: 1,
-  } }).execute();
-  const order = orderResults.body.results[0];
-  if (!order) {
-    log.info("[PAYMENT_INTENT] Order not yet linked to payment", { paymentId });
-    return;
-  }
-  await createOrderPaymentCommentsType();
-  const commentType = (await projectApiRoot.types()
-    .withKey({ key: "order-payment-comments" }).get().execute()).body;
   const comment = paymentTransactionComments(payment.transactions);
-  const actions: any[] = [];
-  if (order.custom?.type && order.custom.type.id !== commentType.id) {
-    log.warn("[PAYMENT_INTENT] Order has another Custom Type; comment remains on Payment", { paymentId });
-    return;
-  }
-  if (order.custom?.type?.id !== commentType.id) {
-    actions.push({ action: "setCustomType", type: { key: "order-payment-comments", typeId: "type" } });
-  }
-  if (order.custom?.fields?.paymentComments !== comment) {
-    actions.push({ action: "setCustomField", name: "paymentComments", value: comment });
-  }
-  if (actions.length) {
-    await projectApiRoot.orders().withId({ ID: order.id }).post({
-      body: { version: order.version, actions },
-    }).execute();
+  requireValue(!requiredComment ||
+    String(original.custom?.fields?.transactionComments ?? "").includes(requiredComment),
+  "Pre-credit refund comment was not saved on the original Payment transaction.");
+  let commentTypeId: string | undefined;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const orderResults = await projectApiRoot.orders().get({ queryArgs: {
+      where: `paymentInfo(payments(id="${paymentId}"))`, limit: 1,
+    } }).execute();
+    const orderRef = orderResults.body.results[0];
+    if (!orderRef) {
+      if (attempt < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        continue;
+      }
+      log.warn("[PAYMENT_INTENT] Order not yet linked to payment", { paymentId });
+      return;
+    }
+    const order = (await projectApiRoot.orders().withId({ ID: orderRef.id }).get().execute()).body;
+    if (!commentTypeId) {
+      await createOrderPaymentCommentsType();
+      commentTypeId = (await projectApiRoot.types()
+        .withKey({ key: "order-payment-comments" }).get().execute()).body.id;
+    }
+    if (order.custom?.type && order.custom.type.id !== commentTypeId) {
+      log.warn("[PAYMENT_INTENT] Order has another Custom Type; comment remains on Payment", { paymentId });
+      return;
+    }
+    const actions: any[] = [];
+    if (order.custom?.type?.id !== commentTypeId) {
+      actions.push({ action: "setCustomType", type: { key: "order-payment-comments", typeId: "type" } });
+    }
+    if (order.custom?.fields?.paymentComments !== comment) {
+      actions.push({ action: "setCustomField", name: "paymentComments", value: comment });
+    }
+    if (!actions.length) return;
+    try {
+      await projectApiRoot.orders().withId({ ID: order.id }).post({
+        body: { version: order.version, actions },
+      }).execute();
+      return;
+    } catch (error: any) {
+      const status = error?.statusCode ?? error?.status ?? error?.body?.statusCode;
+      if (status !== 409 || attempt === 3) throw error;
+    }
   }
 }
 
@@ -363,13 +382,15 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
   requireValue(Number(reference.privateData.creditedAmount ?? 0) === 0,
     "Pre-credit reduction received after credit.");
   const comment = commentFor("refund", latest, reference, amount);
-
   await customObjectService.upsert("nn-private-data", `${payment.id}-${reference.pspReference}`, {
     ...reference.privateData,
     status,
     preCreditRefundedAmount: originalAmount - remaining,
     preCreditRemainingAmount: remaining,
-    additionalInfo: { ...(reference.privateData.additionalInfo ?? {}), comments: comment },
+    additionalInfo: {
+      ...(reference.privateData.additionalInfo ?? {}),
+      comments: appendComment(reference.privateData.additionalInfo?.comments, comment),
+    },
   });
   if (cancelled) {
     await saveCaptureOrCancel(latest, reference, "cancel", reply, comment);
@@ -394,7 +415,7 @@ async function savePreCreditRefund(payment: Payment, reference: Reference,
     if (actions.length) await root.post({ body: { version: latest.version, actions } }).execute();
   }
   if (!cancelled) {
-    try { await syncOrderComment(payment.id, reference.pspReference); }
+    try { await syncOrderComment(payment.id, reference.pspReference, comment); }
     catch (error) {
       log.error("[PAYMENT_INTENT] Pre-credit refund saved; Order comment sync failed", {
         paymentId: payment.id, error,
