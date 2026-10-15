@@ -19,7 +19,7 @@ export function reconcilePreCreditRefund(input: {
       !Number.isSafeInteger(refundAmount) || refundAmount <= 0 || remaining < 0) {
     throw new Error("Invalid pre-credit refund total.");
   }
-  if (cancelled ? remaining !== 0 : status !== "PENDING" || remaining <= 0 ||
+  if (cancelled ? remaining !== 0 : !["PENDING", "CONFIRMED"].includes(status) || remaining <= 0 ||
       Number(transaction?.amount) !== remaining) {
     throw new Error("Novalnet pre-credit refund does not match the remaining balance.");
   }
