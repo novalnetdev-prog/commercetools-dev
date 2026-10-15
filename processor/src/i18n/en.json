@@ -70,6 +70,7 @@
     "collectionSubmissionComment": "The transaction has been submitted to the collection agency. Collection Reference: {{collectionReference}}",
     "chargebackComment": "Chargeback executed successfully for the TID: {{parentTID}} amount: {{formattedAmount}} on {{date}} {{time}}. The subsequent TID: {{eventTID}}.",
     "amountUpdateComment": "Transaction updated successfully for the TID: {{eventTID}} with amount {{formattedAmount}} on {{date}} at {{time}}.",
-    "dueDateUpdateComment": "Transaction updated successfully for the TID: {{eventTID}} with amount {{formattedAmount}} and due date {{dueDate}}."
+    "amountAndDueDateUpdateComment": "The transaction has been updated with amount {{formattedAmount}} on {{date}} {{time}} and due date {{dueDate}}",
+    "dueDateUpdateComment": "The transaction has been updated with a new due date {{dueDate}}."
   }
 }
