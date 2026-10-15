@@ -538,8 +538,8 @@ export class Ach extends BaseComponent {
             >
               ${
                 isGerman
-                  ? 'Bankleitzahl'
-                  : 'Routing Number'
+                  ? 'Bankleitzahl (ABA)'
+                  : 'Routing Number (ABA)'
               }
 
               <span style="color:red;">
