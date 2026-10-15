@@ -53,8 +53,8 @@
     "accountHolder": "Kontoinhaber: {{accountHolder}}",
     "iban": "IBAN: {{iban}}",
     "bic": "BIC: {{bic}}",
-    "bankName": "BANKNAME {{bankName}}",
-    "bankPlace": "BANKORT {{bankPlace}}"
+    "bankName": "Bank: {{bankName}}",
+    "bankPlace": "Ort: {{bankPlace}}"
   },
   "callback": {
     "paymentPendingToOnHold": "Der Status der Transaktion mit der TID: {{eventTID}} wurde am {{date}} {{time}} Uhr von ausstehend auf ausgesetzt geändert.",
