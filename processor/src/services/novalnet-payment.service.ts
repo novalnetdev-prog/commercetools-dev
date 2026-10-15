@@ -47,7 +47,7 @@ import type {
 } from "./novalnet-order-state.service";
 import { bankTransferDetails, bankTransferReference, buildPayPalCartInfo,
   formatNovalnetAmount, getNovalnetSystemInfo, mergeInitialPaymentComments,
-  updateBankTransferReference, paymentTransactionComments } from "../utils/novalnet-request";
+  multibancoReferenceDetails, updateBankTransferReference, paymentTransactionComments } from "../utils/novalnet-request";
 
 type NovalnetConfig = {
   testMode: string;
@@ -887,17 +887,22 @@ export class NovalnetPaymentService extends AbstractPaymentService {
     const paymentType = transactions?.payment_type;
     const isTestMode = transactions?.test_mode == 1;
     const bankDetails = transactions?.bank_details;
+    const multibancoLive = String(paymentType ?? transaction.payment_type).toUpperCase() === "MULTIBANCO" &&
+      Number(transactions?.test_mode ?? testMode) !== 1;
 
     const supportedLocales: SupportedLocale[] = ["en", "de"];
     const localizedTransactionComments = supportedLocales.reduce(
       (acc, locale) => {
-        acc[locale] = [
+        const initialComments = [
           t(locale, "payment.transactionId", { tid }),
           t(locale, "payment.paymentType", {
             type: getPaymentMethodName(locale, paymentType),
           }),
           isTestMode ? t(locale, "payment.testMode") : "",
         ].join("\n");
+        const reference = multibancoLive
+          ? multibancoReferenceDetails(transactions ?? {}, locale) : "";
+        acc[locale] = reference ? `${initialComments.trimEnd()}\n\n${reference}` : initialComments;
         return acc;
       },
       {} as Record<SupportedLocale, string>,
@@ -3887,6 +3892,11 @@ private buildTransactionComments(
 
       if (bankDetails) {
         comments.push("", bankTransferDetails(webhook.transaction, locale));
+      }
+
+      if (String(paymentType).toUpperCase() === "MULTIBANCO" && !isTestMode) {
+        const reference = multibancoReferenceDetails(webhook.transaction ?? {}, locale);
+        if (reference) comments.push("", reference);
       }
 
       return comments.join("\n");
