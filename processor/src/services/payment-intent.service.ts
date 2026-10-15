@@ -273,10 +273,10 @@ async function syncOrderComment(paymentId: string, pspReference: string,
 
 async function syncIntentOrderStates(paymentId: string, kind: Modification | "preCredit",
   reply: NovalnetReply): Promise<void> {
-  const states = mapNovalnetOrderStates({
+  const states = kind === "preCredit" ? { paymentState: "Pending" as const } : mapNovalnetOrderStates({
     status: reply.transaction?.status,
     eventType: kind === "capture" ? "TRANSACTION_CAPTURE" :
-      kind === "cancel" ? "TRANSACTION_CANCEL" : kind === "preCredit" ? "" : "TRANSACTION_REFUND",
+      kind === "cancel" ? "TRANSACTION_CANCEL" : "TRANSACTION_REFUND",
     isPartialCapture: false,
   });
   if (!states) return;
@@ -536,9 +536,15 @@ export async function executePaymentIntent(
     throw new Error("Novalnet response TID does not match the original transaction.");
   }
   const responseStatus = String(reply.transaction?.status ?? "").toUpperCase();
+  const previousPreCreditRefund = Number(reference.privateData.preCreditRefundedAmount ?? 0);
+  const confirmedPreCreditReduction = responseStatus === "CONFIRMED" &&
+    Number(reference.privateData.creditedAmount ?? 0) === 0 &&
+    Number(reply.transaction?.amount) === reference.original.amount.centAmount -
+      previousPreCreditRefund - refundAmount &&
+    Number(reply.transaction?.refund?.amount) === refundAmount;
   const preCredit = kind === "refund" &&
     String(reply.result?.status ?? "").toUpperCase() === "SUCCESS" &&
-    ["DEACTIVATED", "PENDING"].includes(responseStatus) &&
+    (["DEACTIVATED", "PENDING"].includes(responseStatus) || confirmedPreCreditReduction) &&
     !reply.transaction?.refund?.tid && !reply.refund?.tid;
   const outcome = preCredit ? PaymentModificationStatus.APPROVED : getOutcome(kind, reply);
   log.info("[PAYMENT_INTENT] Novalnet modification result", {
