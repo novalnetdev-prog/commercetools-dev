@@ -29,6 +29,7 @@ export function formatNovalnetAmount(amount: unknown, currency: string, locale: 
   if (!Number.isFinite(cents)) return String(amount ?? "");
   return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", {
     style: "currency", currency,
+    ...(currency.toUpperCase() === "USD" && { currencyDisplay: "narrowSymbol" as const }),
   }).format(cents / 100);
 }
 
