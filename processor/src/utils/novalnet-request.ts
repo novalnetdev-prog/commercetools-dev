@@ -18,7 +18,7 @@ export function getNovalnetSystemInfo(storefrontUrl: string, version: string) {
   }
   return {
     system_name: "commercetools",
-    system_version: version,
+    system_version: "NN-" + version,
     system_ip: address?.address ?? "127.0.0.1",
     ...(origin && { system_url: origin }),
   };
