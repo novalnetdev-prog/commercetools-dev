@@ -54,8 +54,8 @@
     "accountHolder": "Account holder: {{accountHolder}}",
     "iban": "IBAN: {{iban}}",
     "bic": "BIC: {{bic}}",
-    "bankName": "BANK NAME {{bankName}}",
-    "bankPlace": "BANK PLACE {{bankPlace}}"
+    "bankName": "Bank: {{bankName}}",
+    "bankPlace": "Place: {{bankPlace}}"
   },
   "callback": {
     "paymentPendingToOnHold": "The transaction status has been changed from pending to on hold for the TID: {{eventTID}} on {{date}} {{time}}.",
