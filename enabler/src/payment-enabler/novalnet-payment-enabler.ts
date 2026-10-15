@@ -100,7 +100,8 @@ export class NovalnetPaymentEnabler implements PaymentEnabler {
   ): Promise<PaymentComponentBuilder | never> {
   
     const { baseOptions } = await this.setupData;
-
+    showReturnedPaymentError(true);
+    
     const normalizedType = type
       ?.trim()
       .toLowerCase();
