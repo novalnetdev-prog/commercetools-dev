@@ -3966,10 +3966,14 @@ private buildTransactionComments(
           });
 
         case "DUE_DATE":
+          return t(locale, "callback.dueDateUpdateComment", {           
+            dueDate: String(webhook.transaction?.due_date ?? ""),
+          });          
         case "AMOUNT_DUE_DATE":
-          return t(locale, "callback.dueDateUpdateComment", {
-            eventTID,
+          return t(locale, "callback.amountAndDueDateUpdateComment", {
             formattedAmount,
+            date,
+            time,
             dueDate: String(webhook.transaction?.due_date ?? ""),
           });
 
