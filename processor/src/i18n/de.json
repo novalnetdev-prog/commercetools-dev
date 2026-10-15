@@ -58,7 +58,7 @@
   },
   "callback": {
     "paymentPendingToOnHold": "Der Status der Transaktion mit der TID: {{eventTID}} wurde am {{date}} {{time}} Uhr von ausstehend auf ausgesetzt geändert.",
-    "pendingToComplete": "Der Status der Transaktion mit der TID: {{eventTID}} wurde am {{date}} {{time}} Uhr von ausstehend auf bestätigt geändert.",
+    "pendingToComplete": "Der Status der Transaktion mit der TID: {{eventTID}} wurde am {{date}} {{time}} Uhr von ausstehend auf Abgeschlossen geändert.",
     "onholdToComplete": "Der Status der Transaktion mit der TID: {{eventTID}} wurde am {{date}} {{time}} Uhr von ausgesetzt auf bestätigt geändert.",
     "captureComment": "Die Buchung wurde am {{date}} um {{time}} Uhr bestätigt.",
     "cancelComment": "Die Transaktion wurde am {{date}} um {{time}} Uhr storniert.",
