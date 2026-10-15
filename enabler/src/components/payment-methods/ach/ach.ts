@@ -1,4 +1,5 @@
 import { accountHolderValidationMessage, bindAccountHolderValidation, isValidAccountHolder } from "../account-holder";
+import { achNumberValidationMessage, bindAchNumberValidation, isValidAchNumber } from './numeric-field';
 import {
   ComponentOptions,
   PaymentComponent,
@@ -91,6 +92,14 @@ export class Ach extends BaseComponent {
       container.querySelector<HTMLInputElement>('#achForm-accHolder'),
       this.getLanguage(),
       (message) => this.onError(message),
+    );
+    bindAchNumberValidation(
+      container.querySelector<HTMLInputElement>('#achForm-accountNumber'),
+      this.getLanguage(), 'account', (message) => this.onError(message),
+    );
+    bindAchNumberValidation(
+      container.querySelector<HTMLInputElement>('#achForm-routingNumber'),
+      this.getLanguage(), 'routing', (message) => this.onError(message),
     );
 
     setTimeout(
@@ -207,6 +216,16 @@ export class Ach extends BaseComponent {
 
       if (!isValidAccountHolder(accountHolder)) {
         this.onError(accountHolderValidationMessage(this.getLanguage()));
+        return;
+      }
+
+      if (!isValidAchNumber(accountNumber)) {
+        this.onError(achNumberValidationMessage(this.getLanguage(), 'account'));
+        return;
+      }
+
+      if (!isValidAchNumber(routingNumber)) {
+        this.onError(achNumberValidationMessage(this.getLanguage(), 'routing'));
         return;
       }
 
@@ -484,6 +503,7 @@ export class Ach extends BaseComponent {
               placeholder="123456789"
               autocomplete="off"
               inputmode="numeric"
+              pattern="[0-9]*"
               required
               style="
                 width:100%;
@@ -534,6 +554,7 @@ export class Ach extends BaseComponent {
               placeholder="123456789"
               autocomplete="off"
               inputmode="numeric"
+              pattern="[0-9]*"
               required
               style="
                 width:100%;
