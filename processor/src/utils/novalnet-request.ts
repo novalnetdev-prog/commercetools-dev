@@ -18,7 +18,7 @@ export function getNovalnetSystemInfo(storefrontUrl: string, version: string) {
   }
   return {
     system_name: "commercetools",
-    system_version: "NN-" + version,
+    system_version: version,
     system_ip: address?.address ?? "127.0.0.1",
     ...(origin && { system_url: origin }),
   };
@@ -43,7 +43,10 @@ export function mergeInitialPaymentComments(existing: string, initial: string): 
     block.startsWith(initialId);
   const previousInitial = blocks.find(isInitial) ?? "";
 
-  const canonical = !initial.includes("IBAN:") && previousInitial.includes("IBAN:") &&
+  const hasMultibancoReference = (comment: string) =>
+    comment.includes("Partner Payment Reference:") || comment.includes("Partner-Zahlungsreferenz:");
+  const canonical = ((!initial.includes("IBAN:") && previousInitial.includes("IBAN:")) ||
+    (!hasMultibancoReference(initial) && hasMultibancoReference(previousInitial))) &&
     previousInitial.startsWith(initialId) ? previousInitial : initial;
   return [canonical, ...blocks.filter((block) => !isInitial(block))].join(paymentCommentSeparator);
 }
@@ -81,6 +84,19 @@ export function bankTransferDetails(transaction: Record<string, any>, locale: Su
     }));
   }
   return lines.join("\n");
+}
+
+export function multibancoReferenceDetails(transaction: Record<string, any>, locale: SupportedLocale): string {
+  const reference = String(transaction.partner_payment_reference ?? "").trim();
+  if (!reference) return "";
+  const entity = String(transaction.service_supplier_id ?? "").trim();
+  return [
+    t(locale, "payment.multibancoInstructions", {
+      amount: formatNovalnetAmount(transaction.amount, String(transaction.currency ?? "EUR"), locale),
+    }),
+    t(locale, "payment.multibancoPartnerReference", { reference }),
+    entity ? t(locale, "payment.multibancoEntity", { entity }) : "",
+  ].filter(Boolean).join("\n");
 }
 
 export function updateBankTransferReference(comments: string, transaction: Record<string, any>, locale: SupportedLocale): string {
