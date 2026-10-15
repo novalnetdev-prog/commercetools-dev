@@ -2564,9 +2564,7 @@ private async getModificationFlags(paymentId: string, eventType: string, status?
     const statusCode =
       status === "CONFIRMED"
         ? "100"
-        : status === "ON_HOLD"
-          ? "98"
-          : String(webhook.transaction?.status_code ?? "");
+        : String(webhook.transaction?.status_code ?? "");
 
     await this.updatePaymentTransaction({
       paymentId,
