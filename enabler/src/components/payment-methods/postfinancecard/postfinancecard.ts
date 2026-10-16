@@ -145,7 +145,7 @@ export class Postfinancecard
         PaymentRequestSchemaDTO = {
 
         paymentMethod: {
-          type: "POSTFINANCE",
+          type: "POSTFINANCE_CARD",
         },
 
         paymentOutcome:
