@@ -138,7 +138,7 @@ export class Postfinance extends BaseComponent {
         PaymentRequestSchemaDTO = {
 
         paymentMethod: {
-          type: "POSTFINANCE_EFINANCE",
+          type: "POSTFINANCE",
         },
 
         paymentOutcome:
