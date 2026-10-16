@@ -1,6 +1,6 @@
 {
   "name": "payment-integration-novalnet",
-  "version": "4.1.0",
+  "version": "1.0.0",
   "description": "Payment provider integration template",
   "main": "dist/main.js",
   "scripts": {
