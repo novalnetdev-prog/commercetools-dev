@@ -30,16 +30,11 @@ export function mapNovalnetOrderStates({
       return paymentStatus === "CANCELLED" || paymentStatus === "DEACTIVATED"
         ? { paymentState: "Failed" }
         : null;
-    // case "CHARGEBACK":
-    //   return isPartialChargeback
-    //     ? { paymentState: "BalanceDue" }
-    //     : { paymentState: "Paid" };
-    // case "RETURN_DEBIT":
-    // case "RETURN_DEBIT_SEPA":
-    // case "REVERSAL":
-    //   return isPartialChargeback
-    //     ? { paymentState: "BalanceDue" }
-    //     : { paymentState: "Failed" };
+    case "CHARGEBACK":
+    case "RETURN_DEBIT":
+    case "RETURN_DEBIT_SEPA":
+    case "REVERSAL":
+      return null;
     case "CREDIT":
       if (paymentStatus === "FAILURE") return null;
       return isPartialCredit
